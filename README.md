@@ -428,7 +428,7 @@
 
         <div class="form-group">
           <label>Jefe de Cuadrilla *</label>
-          <input type="text" id="jefe_cuadrilla" placeholder="Apellidos y Nombres" required />
+          <input type="text" id="jefe_cuadrilla" placeholder="Nombres y Apellidos" required />
         </div>
 
         <div class="form-group">
@@ -438,7 +438,7 @@
 
         <div class="form-group">
           <label>Supervisor Operativo</label>
-          <input type="text" id="supervisor" placeholder="Apellidos y Nombres" />
+          <input type="text" id="supervisor" placeholder="Nombres y Apellidos" />
         </div>
 
         <div class="form-group">
@@ -491,14 +491,14 @@
     <div class="card">
       <div class="seccion-header seccion-vg">
         <div class="seccion-toggle" onclick="toggleSeccion('vg')">
-          <div class="seccion-titulo">✅ VERIFICACIÓN GENERAL (OBLIGATORIO) <span class="badge-count">28 ítems</span></div>
+          <div class="seccion-titulo">VERIFICACIÓN GENERAL (OBLIGATORIO) <span class="badge-count">28 ítems</span></div>
           <span class="seccion-arrow" id="arrow-vg">▼</span>
         </div>
         <select class="estado-general-select" onchange="aplicarEstadoGeneral('vg', this.value)">
           <option value="">-- Estado general --</option>
-          <option value="Cumple">✅ Todos CUMPLE</option>
-          <option value="No cumple">❌ Todos NO CUMPLE</option>
-          <option value="N/A">⬜ Todos N/A</option>        
+          <option value="Cumple">Todos CUMPLE</option>
+          <option value="No cumple">Todos NO CUMPLE</option>
+          <option value="N/A">Todos N/A</option>        
         </select>
       </div>
       <div class="seccion-content" id="content-vg">
@@ -515,9 +515,9 @@
         </div>
         <select class="estado-general-select" onchange="aplicarEstadoGeneral('ge', this.value)">
           <option value="">-- Estado general --</option>
-          <option value="Cumple">✅ Todos CUMPLE</option>
-          <option value="No cumple">❌ Todos NO CUMPLE</option>
-          <option value="N/A">⬜ Todos N/A</option>          
+          <option value="Cumple">Todos CUMPLE</option>
+          <option value="No cumple">Todos NO CUMPLE</option>
+          <option value="N/A">Todos N/A</option>          
         </select>
       </div>
       <div class="seccion-content" id="content-ge">
@@ -529,14 +529,14 @@
     <div class="card">
       <div class="seccion-header seccion-re">
         <div class="seccion-toggle" onclick="toggleSeccion('re')">
-          <div class="seccion-titulo">⛏️ RIESGO DE EXCAVACIÓN <span class="badge-count">4 ítems</span></div>
+          <div class="seccion-titulo">RIESGO DE EXCAVACIÓN <span class="badge-count">4 ítems</span></div>
           <span class="seccion-arrow" id="arrow-re">▼</span>
         </div>
         <select class="estado-general-select" onchange="aplicarEstadoGeneral('re', this.value)">
           <option value="">-- Estado general --</option>
-          <option value="Cumple">✅ Todos CUMPLE</option>
-          <option value="No cumple">❌ Todos NO CUMPLE</option>
-          <option value="N/A">⬜ Todos N/A</option> 
+          <option value="Cumple">Todos CUMPLE</option>
+          <option value="No cumple">Todos NO CUMPLE</option>
+          <option value="N/A">Todos N/A</option> 
         </select>
       </div>
       <div class="seccion-content" id="content-re">
@@ -563,7 +563,7 @@
       </div>
     </div>
 
-    <button class="btn-enviar" onclick="mostrarRevision()" id="btn-enviar">👁️ SIGUIENTE</button>
+    <button class="btn-enviar" onclick="mostrarRevision()" id="btn-enviar">SIGUIENTE</button>
   </div>
 </div>
 
@@ -596,7 +596,7 @@
     <!-- VERIFICACIÓN GENERAL -->
     <div class="card">
       <div class="card-title" style="display:flex;justify-content:space-between;align-items:center;">
-        ✅ Verificación General
+        Verificación General
         <button onclick="editarSeccion('vg')" style="padding:6px 14px;background:#1F4E79;color:white;border:none;border-radius:6px;cursor:pointer;font-size:12px;">✏️ Editar</button>
       </div>
       <div id="rev-vg"></div>
@@ -614,7 +614,7 @@
     <!-- RIESGO EXCAVACIÓN -->
     <div class="card">
       <div class="card-title" style="display:flex;justify-content:space-between;align-items:center;">
-        ⛏️ Riesgo de Excavación
+        Riesgo de Excavación
         <button onclick="editarSeccion('re')" style="padding:6px 14px;background:#6B2C91;color:white;border:none;border-radius:6px;cursor:pointer;font-size:12px;">✏️ Editar</button>
       </div>
       <div id="rev-re"></div>
@@ -840,9 +840,9 @@ function itemHTML(item, tipo) {
         <span class="item-descripcion">${item.desc}</span>
       </div>
       <div class="item-respuesta">
-        <button class="btn-respuesta cumple" id="btn-${item.id}-cumple" onclick="setResp('${item.id}','Cumple')">✅ Cumple</button>
-        <button class="btn-respuesta nocumple" id="btn-${item.id}-nocumple" onclick="setResp('${item.id}','No cumple')">❌ No cumple</button>
-        <button class="btn-respuesta na" id="btn-${item.id}-na" onclick="setResp('${item.id}','N/A')">⬜ N/A</button>
+        <button class="btn-respuesta cumple" id="btn-${item.id}-cumple" onclick="setResp('${item.id}','Cumple')">Cumple</button>
+        <button class="btn-respuesta nocumple" id="btn-${item.id}-nocumple" onclick="setResp('${item.id}','No cumple')">No cumple</button>
+        <button class="btn-respuesta na" id="btn-${item.id}-na" onclick="setResp('${item.id}','N/A')">N/A</button>
       </div>
       <div class="item-extra">
         <div class="item-obs">
@@ -1201,3 +1201,4 @@ document.addEventListener('input', e => {
 </script>
 </body>
 </html>
+
