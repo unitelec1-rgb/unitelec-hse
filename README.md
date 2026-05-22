@@ -249,9 +249,12 @@
 <!-- FORMULARIO -->
 <div id="form-screen">
   <div class="header">
-    <div>
-      <div class="header-logo">UNITELEC HSE</div>
-      <div class="header-title">Inspección de Seguridad y Salud</div>
+    <div style="display:flex;align-items:center;gap:14px;">
+      <img src="logo.png" alt="UNITELEC" style="height:38px;object-fit:contain;filter:brightness(0) invert(1);" onerror="this.style.display='none'" />
+      <div>
+        <div class="header-logo">UNITELEC HSE</div>
+        <div class="header-title">Inspección de Seguridad y Salud</div>
+      </div>
     </div>
     <div style="text-align:right">
       <div class="header-user" id="header-user"></div>
@@ -428,7 +431,7 @@
 
         <div class="form-group">
           <label>Jefe de Cuadrilla *</label>
-          <input type="text" id="jefe_cuadrilla" placeholder="Nombres y Apellidos" required />
+          <input type="text" id="jefe_cuadrilla" placeholder="Apellidos y Nombres" required />
         </div>
 
         <div class="form-group">
@@ -438,7 +441,7 @@
 
         <div class="form-group">
           <label>Supervisor Operativo</label>
-          <input type="text" id="supervisor" placeholder="Nombres y Apellidos" />
+          <input type="text" id="supervisor" placeholder="Apellidos y Nombres" />
         </div>
 
         <div class="form-group">
@@ -510,7 +513,7 @@
     <div class="card">
       <div class="seccion-header seccion-ge">
         <div class="seccion-toggle" onclick="toggleSeccion('ge')">
-          <div class="seccion-titulo">🚨 GESTIÓN DE EMERGENCIAS (OBLIGATORIO) <span class="badge-count">3 ítems</span></div>
+          <div class="seccion-titulo">GESTIÓN DE EMERGENCIAS (OBLIGATORIO) <span class="badge-count">3 ítems</span></div>
           <span class="seccion-arrow" id="arrow-ge">▼</span>
         </div>
         <select class="estado-general-select" onchange="aplicarEstadoGeneral('ge', this.value)">
@@ -563,16 +566,19 @@
       </div>
     </div>
 
-    <button class="btn-enviar" onclick="mostrarRevision()" id="btn-enviar">SIGUIENTE</button>
+    <button class="btn-enviar" onclick="mostrarRevision()" id="btn-enviar">👁️ SIGUIENTE</button>
   </div>
 </div>
 
 <!-- REVISIÓN -->
 <div id="revision-screen" style="display:none;">
   <div class="header">
-    <div>
-      <div class="header-logo">UNITELEC HSE</div>
-      <div class="header-title">Revisión de Inspección</div>
+    <div style="display:flex;align-items:center;gap:14px;">
+      <img src="logo.png" alt="UNITELEC" style="height:38px;object-fit:contain;filter:brightness(0) invert(1);" onerror="this.style.display='none'" />
+      <div>
+        <div class="header-logo">UNITELEC HSE</div>
+        <div class="header-title">Revisión de Inspección</div>
+      </div>
     </div>
     <div style="text-align:right">
       <div class="header-user" id="header-user-rev"></div>
@@ -596,7 +602,7 @@
     <!-- VERIFICACIÓN GENERAL -->
     <div class="card">
       <div class="card-title" style="display:flex;justify-content:space-between;align-items:center;">
-        Verificación General
+        ✅ Verificación General
         <button onclick="editarSeccion('vg')" style="padding:6px 14px;background:#1F4E79;color:white;border:none;border-radius:6px;cursor:pointer;font-size:12px;">✏️ Editar</button>
       </div>
       <div id="rev-vg"></div>
@@ -614,7 +620,7 @@
     <!-- RIESGO EXCAVACIÓN -->
     <div class="card">
       <div class="card-title" style="display:flex;justify-content:space-between;align-items:center;">
-        Riesgo de Excavación
+        ⛏️ Riesgo de Excavación
         <button onclick="editarSeccion('re')" style="padding:6px 14px;background:#6B2C91;color:white;border:none;border-radius:6px;cursor:pointer;font-size:12px;">✏️ Editar</button>
       </div>
       <div id="rev-re"></div>
@@ -634,9 +640,10 @@
 </div>
 
 <!-- ÉXITO -->
-<div id="success-screen" style="display:none;min-height:100vh;background:linear-gradient(135deg,#1E6B3C,#27ae60);align-items:center;justify-content:center;">
-  <div class="success-box" style="background:white;border-radius:16px;padding:50px 40px;text-align:center;max-width:450px;width:90%;">
-    <div style="font-size:60px;margin-bottom:20px;">✅</div>
+<div id="success-screen" style="display:none;min-height:100vh;background-image:url('fondo.png');background-size:cover;background-position:center;background-repeat:no-repeat;align-items:center;justify-content:center;">
+  <div class="success-box" style="background:rgba(255,255,255,0.92);backdrop-filter:blur(8px);border-radius:16px;padding:50px 40px;text-align:center;max-width:450px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,0.5);">
+    <img src="logo.png" alt="UNITELEC" style="width:180px;margin-bottom:20px;object-fit:contain;" onerror="this.style.display='none'" />
+    <div style="font-size:60px;margin-bottom:20px;filter:grayscale(1) brightness(0.25);">✅</div>
     <div style="font-size:24px;font-weight:bold;color:#1E6B3C;margin-bottom:10px;">¡Inspección Enviada!</div>
     <div style="color:#666;margin-bottom:20px;">Registrada exitosamente en el sistema UNITELEC.</div>
     <div style="font-size:18px;font-weight:bold;color:#1F4E79;" id="success-codigo"></div>
@@ -1201,4 +1208,3 @@ document.addEventListener('input', e => {
 </script>
 </body>
 </html>
-
