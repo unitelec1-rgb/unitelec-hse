@@ -1704,7 +1704,6 @@ function aplicarEstadoGeneral(sec, val) {
 
 // ─── EVIDENCIAS ───
 function toggleEvid(id, show) {
-  document.getElementById(`evid-${id}`).classList.toggle('visible', show);
   document.getElementById(`esi-${id}`).className = show ? 'active-si' : '';
   document.getElementById(`eno-${id}`).className = show ? '' : 'active-no';
 }
