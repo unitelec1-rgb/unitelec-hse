@@ -1638,22 +1638,19 @@ function itemHTML(item, tipo) {
         <button class="btn-respuesta nocumple" id="btn-${item.id}-nocumple" onclick="setResp('${item.id}','No cumple')">No cumple</button>
         <button class="btn-respuesta na" id="btn-${item.id}-na" onclick="setResp('${item.id}','N/A')">N/A</button>
       </div>
-      <div class="item-extra">
-        <div class="item-obs">
-          <label>📝 OBSERVACIONES</label>
-          <textarea id="obs-${item.id}" placeholder="Observaciones..."></textarea>
-        </div>
-        <div>
-          <div class="evidencia-toggle">
-            <label>📷 EVIDENCIAS</label>
-            <div class="toggle-btn">
-              <button id="esi-${item.id}" onclick="toggleEvid('${item.id}',true)">Sí</button>
-              <button id="eno-${item.id}" class="active-no" onclick="toggleEvid('${item.id}',false)">No</button>
-            </div>
-          </div>
-
-        </div>
-      </div>
+<div style="display:flex;align-items:center;gap:16px;margin-top:14px;flex-wrap:wrap;">
+  <textarea id="obs-${item.id}" placeholder="📝 Observaciones..." 
+    style="flex:1;min-width:180px;padding:10px 14px;border:1.5px solid #D8E1EC;border-radius:12px;font-size:13px;background:#F8FAFC;resize:none;height:42px;font-family:inherit;line-height:1.4;transition:all 0.2s;"
+    onfocus="this.style.height='90px'" onblur="if(!this.value)this.style.height='42px'">
+  </textarea>
+  <div style="display:flex;align-items:center;gap:8px;white-space:nowrap;flex-shrink:0;">
+    <span style="font-size:11px;font-weight:700;color:#64748B;text-transform:uppercase;letter-spacing:1px;">📷 Evidencia</span>
+    <button id="esi-${item.id}" onclick="toggleEvid('${item.id}',true)"
+      style="padding:6px 14px;border-radius:999px;border:1.5px solid #ddd;background:white;cursor:pointer;font-size:12px;font-weight:700;transition:all 0.2s;">Sí</button>
+    <button id="eno-${item.id}" class="active-no" onclick="toggleEvid('${item.id}',false)"
+      style="padding:6px 14px;border-radius:999px;border:1.5px solid #ddd;background:white;cursor:pointer;font-size:12px;font-weight:700;transition:all 0.2s;">No</button>
+  </div>
+</div>
     </div>`;
 }
 
