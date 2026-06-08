@@ -1670,14 +1670,16 @@ function aplicarEstadoGeneral(sec, val) {
 
 // ─── EVIDENCIAS ───
 function toggleEvid(id, show) {
+  document.getElementById(`evid-${id}`).classList.toggle('visible', show);
   document.getElementById(`esi-${id}`).className = show ? 'active-si' : '';
   document.getElementById(`eno-${id}`).className = show ? '' : 'active-no';
 }
- function previewGenImg(n, input) {
+
+function previewImg(id, input) {
   if (input.files?.[0]) {
     const reader = new FileReader();
     reader.onload = e => {
-      const p = document.getElementById(`prev-gen-${n}`);
+      const p = document.getElementById(`prev-${id}`);
       p.src = e.target.result;
       p.style.display = 'block';
     };
