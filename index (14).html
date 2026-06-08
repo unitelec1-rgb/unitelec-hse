@@ -1,0 +1,2020 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inspección SST - UNITELEC</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: "Segoe UI Variable", "Segoe UI", system-ui, -apple-system, sans-serif; background: #f0f4f8; color: #333; font-size: 14px; }
+
+  /* LOGIN - NUEVO DISEÑO */
+  #login-screen {
+    min-height: 100vh; display: flex; flex-direction: column;
+    position: relative; overflow: hidden; background: #0B1F3A;
+  }
+  .login-bg { position: absolute; inset: 0; background-image: url('fondo.png');
+    background-size: cover; background-position: center; opacity: 1.0; }
+  .login-overlay { position: absolute; inset: 0;
+    background: linear-gradient(115deg, rgba(2,10,25,0.82) 0%, rgba(7,22,48,0.62) 35%, rgba(15,50,110,0.32) 60%, rgba(2,10,25,0.78) 100%); }
+  .login-glow-1 { position: absolute; top: -150px; right: -150px; width: 500px; height: 500px;
+    border-radius: 50%; background: radial-gradient(circle, rgba(45,108,223,0.18) 0%, transparent 70%); pointer-events: none; }
+  .login-glow-2 { position: absolute; bottom: -100px; left: -100px; width: 350px; height: 350px;
+    border-radius: 50%; background: radial-gradient(circle, rgba(59,130,246,0.12) 0%, transparent 70%); pointer-events: none; }
+  .login-header { position: relative; z-index: 10; padding: 28px 40px; display: flex; align-items: center; gap: 12px; }
+  .login-header img { height: 36px; object-fit: contain; filter: drop-shadow(0 0 12px rgba(255,255,255,0.08)); image-rendering: -webkit-optimize-contrast; drop-shadow: 0 4px 12px rgba(0,0,0,0.25); }
+  .login-header-text { color: white; font-size: 11px; opacity: 0.5; text-transform: uppercase; letter-spacing: 2px; }
+  .login-main { position: relative; z-index: 10; flex: 1; display: flex; align-items: center;
+    justify-content: center; padding: 20px; gap: 80px; }
+  .login-left { flex: 1; max-width: 420px; color: white; display: none; }
+  @media (min-width: 900px) { .login-left { display: block; } }
+  .login-left-title { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.45);
+    text-transform: uppercase; letter-spacing: 2px; margin-bottom: 16px; }
+  .login-left h1 { font-size: 38px; font-weight: 800; line-height: 1.05; margin-bottom: 16px; letter-spacing: -1px; }
+  .login-left h1 span { color: #4F8CFF; }
+  .login-left-desc { font-size: 14px; color: rgba(255,255,255,0.5); line-height: 1.7; margin-bottom: 36px; }
+  .login-features { display: flex; flex-direction: column; gap: 16px; }
+  .login-feature { display: flex; align-items: flex-start; gap: 14px; }
+  .login-feature-icon { width: 40px; height: 40px; flex-shrink: 0; background: rgba(59,130,246,0.12);
+    border: 1px solid rgba(59,130,246,0.25); border-radius: 10px; display: flex;
+    align-items: center; justify-content: center; font-size: 16px; }
+  .login-feature-text strong { display: block; font-size: 13px; font-weight: 700; color: white; margin-bottom: 2px; }
+  .login-feature-text span { font-size: 12px; color: rgba(255,255,255,0.4); }
+  .login-card { width: 100%; max-width: 440px; background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 40px 36px;
+    backdrop-filter: blur(20px); box-shadow: 0 30px 70px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.04);
+    animation: loginFadeIn 0.5s ease; }
+  @keyframes loginFadeIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+  .login-card-logo { padding-bottom: 18px; text-align: center; margin-bottom: 24px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+  .login-card-logo img { height: 44px; object-fit: contain; filter: drop-shadow(0 0 12px rgba(255,255,255,0.08)); image-rendering: -webkit-optimize-contrast; transition: all 0.25s ease; }
+  .login-card-logo-fallback { font-size: 20px; font-weight: 800; color: white; letter-spacing: -0.5px; }
+  .login-card-logo-sub { font-size: 10px; color: rgba(255,255,255,0.35); text-transform: uppercase; letter-spacing: 2px; margin-top: 4px; }
+  .login-card-divider { height: 1px; background: rgba(255,255,255,0.08); margin: 0 0 24px; }
+  .login-card-title { font-size: 20px; font-weight: 700; color: white; text-align: center; margin-bottom: 4px; letter-spacing: -0.4px; }
+  .login-card-subtitle { font-size: 13px; color: rgba(255,255,255,0.4); text-align: center; margin-bottom: 28px; }
+  .login-field-label { display: block; font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.5);
+    text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+  .login-field-wrap { position: relative; margin-bottom: 16px; }
+  .login-field-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+    color: rgba(255,255,255,0.25); font-size: 14px; pointer-events: none; }
+  .login-input-field { width: 100%; padding: 12px 14px 12px 40px; background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.8); border-radius: 18px; font-size: 15px; color: white;
+    font-family: "Segoe UI Variable", "Segoe UI", system-ui, -apple-system, sans-serif; transition: all 0.2s; outline: none; }
+  .login-input-field::placeholder { color: rgba(255,255,255,0.45); }
+  .login-input-field:focus { border-color: #3B82F6; background: rgba(255,255,255,0.1); box-shadow: 0 0 0 3px rgba(59,130,246,0.15); }
+  .login-box { background: transparent !important; border-radius: 0 !important; padding: 0 !important;
+    width: 100% !important; max-width: none !important; box-shadow: none !important;
+    text-align: left !important; backdrop-filter: none !important; }
+  .btn-login { width: 100%; padding: 13px 14px; background: linear-gradient(135deg, #1E4D8C, #2D6CDF);
+    color: white; border: none; border-radius: 10px; font-size: 15px; font-weight: 700;
+    cursor: pointer; font-family: "Segoe UI Variable", "Segoe UI", system-ui, -apple-system, sans-serif; letter-spacing: 0.02em; transition: all 0.2s;
+    box-shadow: 0 4px 16px rgba(45,108,223,0.35); margin-top: 4px; }
+  .btn-login:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(45,108,223,0.45); }
+  .login-ms-divider { display: flex; align-items: center; gap: 12px; margin: 20px 0;
+    color: rgba(255,255,255,0.2); font-size: 12px; }
+  .login-ms-divider::before, .login-ms-divider::after { content: ''; flex: 1; height: 1px; background: rgba(255,255,255,0.1); }
+  .login-ms-btn { width: 100%; padding: 10px 14px; background: rgba(255,255,255,0.06);
+    border: 1.5px solid rgba(255,255,255,0.12); border-radius: 10px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.7);
+    font-family: "Segoe UI Variable", "Segoe UI", system-ui, -apple-system, sans-serif; transition: all 0.2s; }
+  .login-ms-btn:hover { background: rgba(255,255,255,0.1); color: white; }
+  .login-error { color: #FCA5A5; font-size: 13px; margin-top: 12px; display: none;
+    background: rgba(220,38,38,0.1); border: 1px solid rgba(220,38,38,0.2);
+    border-radius: 8px; padding: 8px 12px; text-align: center; }
+  .login-footer { position: relative; z-index: 10; padding: 20px 40px;
+    display: flex; align-items: center; justify-content: space-between;
+    border-top: 1px solid rgba(255,255,255,0.05); }
+  .login-footer-copy { font-size: 11px; color: rgba(255,255,255,0.2); }
+  .login-footer-badge { display: flex; align-items: center; gap: 6px; font-size: 11px; color: rgba(255,255,255,0.25); }
+  .login-footer-badge-icon { width: 20px; height: 20px; border-radius: 50%; background: rgba(59,130,246,0.15);
+    border: 1px solid rgba(59,130,246,0.25); display: flex; align-items: center; justify-content: center; font-size: 10px; }
+
+  /* FORM */
+  #form-screen { display: none; min-height: 100vh; background: linear-gradient(135deg, #EEF3F9 0%, #F4F7FB 45%,#E7EEF8 100%); font-family: "Segoe UI Variable", "Segoe UI", system-ui, -apple-system, sans-serif; }
+  .header {
+    background: linear-gradient(135deg, rgba(11,31,58,0.98), rgba(22,59,105,0.96) ); color: white; padding: 18px 28px;
+    display: flex; align-items: center; justify-content: space-between;
+    position: sticky; top: 0; z-index: 100; backdrop-filter: blur(18px); border-bottom: 1px solid rgba(255,255,255,0.08); box-shadow: 0 10px 40px rgba(0,0,0,0.18);
+  }
+  .header-logo { font-size: 20px; font-weight: bold; }
+  .header-title { font-size: 14px; opacity: 0.9; }
+  .header-user { font-size: 12px; opacity: 0.8; }
+  .btn-logout {
+    background: rgba(255,255,255,0.2); color: white;
+    border: 1px solid rgba(255,255,255,0.4); padding: 6px 14px;
+    border-radius: 6px; cursor: pointer; font-size: 12px;
+  }
+  .container { max-width: 1180px; margin: 0 auto; padding: 32px 28px; }
+
+  .progress-bar { background: #e0e0e0; border-radius: 10px; height: 8px; margin-bottom: 20px; overflow: hidden; }
+  .progress-fill { background: linear-gradient(90deg, #1F4E79, #2E75B6); height: 100%; border-radius: 10px; transition: width 0.5s; width: 0%; }
+
+  .card { background: rgba(255,255,255,0.82); backdrop-filter:blur(14px); border:1px solid rgba(255,255,255,0.7); border-radius: 28px; padding: 34px; margin-bottom: 28px; box-shadow: 0 12px 40px rgba(15,23,42,0.08), 0 2px 8px rgba(15,23,42,0.04); transition: all .25s ease; }
+  .card:hover { transform: translateY(-2px); box-shadow: 0 18px 48px rgba(15,23,42,0.12); }
+  .card-title { font-size: 20px; font-weight: 800; color: #0B1F3A; margin-bottom: 28px; padding-bottom: 18px; border-bottom: 1px solid rgba(15,23,42,0.08); letter-spacing: -0.4px; display: flex; align-items: center; gap: 12px; }
+
+  .form-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(260px,1fr)); gap: 24px; }
+  @media (max-width: 600px) { .form-grid { grid-template-columns: 1fr; gap:18px; } .form-group.full { grid-column: 1 / -1; } .form-group input, .form-group select, .form-group textarea { width: 100%; min-width: 0; font-size: 16px; } .card { padding: 24px 18px; border-radius: 20px; } .container { padding: 14px; } .header { padding: 14px 16px; flex-direction: column; align-items: flex-start; gap: 12px; } .header img { height: 34px !important; } .header-title { font-size: 13px; } .btn-logout { width: 100%; } }
+  .form-group { display: flex; flex-direction: column; gap: 10px; }
+  .form-group.full { grid-column: 1 / -1; }
+  .form-group label { font-size: 11px; font-weight: 700; color: #555; letter-spacing: 1.2px; text-transform: uppercase; color: #64748B; margin-left: 4px; }
+  .form-group input, .form-group select, .form-group textarea {
+    width: 100%; min-width: 0; padding: 13px 16px; border:1.5px solid rgba(148,163,184,0.18); border-radius: 16px;
+    font-size: 16px; background: rgba(255,255,255,0.92); color: #0F172A; transition: all .25s ease; font-family: "Segoe UI Variable", "Segoe UI", system-ui, -apple-system, sans-serif; box-shadow: inset 0 1px 2px rgba(0,0,0,0.02);
+  }
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: #2D6CDF; background: white; box-shadow: 0 0 0 5px rgba(45,108,223,0.12), 0 8px 24px rgba(45,108,223,0.08); }
+  .form-group textarea { resize: vertical; min-height: 130px; line-height: 1.6; }
+
+  .seccion-header {
+    border-radius: 8px; padding: 14px 18px; margin-bottom: 16px;
+    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;
+  }
+  .seccion-cro   { background: linear-gradient(135deg, #163B69, #2D6CDF); color: white; transition: all 0.25s ease; }
+.seccion-cro:hover   { filter: brightness(1.1); }
+
+.seccion-aic  { background: linear-gradient(135deg, #92400E, #D97706); color: white; transition: all 0.25s ease; }
+.seccion-aic:hover  { filter: brightness(1.1); }
+
+.seccion-pt   { background: linear-gradient(135deg, #7F1D1D, #DC2626); color: white; transition: all 0.25s ease; }
+.seccion-pt:hover   { filter: brightness(1.1); }
+
+.seccion-epp   { background: linear-gradient(135deg, #78350F, #B45309); color: white; transition: all 0.25s ease; }
+.seccion-epp:hover   { filter: brightness(1.1); }
+
+.seccion-covid   { background: linear-gradient(135deg, #14532D, #16A34A); color: white; transition: all 0.25s ease; }
+.seccion-covid:hover   { filter: brightness(1.1); }
+
+.seccion-dhse   { background: linear-gradient(135deg, #1E3A5F, #2563EB); color: white; transition: all 0.25s ease; }
+.seccion-dhse:hover   { filter: brightness(1.1); }
+
+.seccion-meh   { background: linear-gradient(135deg, #78350F, #C2410C); color: white; transition: all 0.25s ease; }
+.seccion-meh:hover   { filter: brightness(1.1); }
+
+.seccion-ct   { background: linear-gradient(135deg, #14532D, #15803D); color: white; transition: all 0.25s ease; }
+.seccion-ct:hover   { filter: brightness(1.1); }
+
+.seccion-spp   { background: linear-gradient(135deg, #7F1D1D, #B91C1C); color: white; transition: all 0.25s ease; }
+.seccion-spp:hover   { filter: brightness(1.1); }
+
+.seccion-irc   { background: linear-gradient(135deg, #1C1917, #44403C); color: white; transition: all 0.25s ease; }
+.seccion-irc:hover   { filter: brightness(1.1); }
+
+.seccion-icp  { background: linear-gradient(135deg, #C55A11, #EA580C); color: white; transition: all 0.25s ease; }
+.seccion-icp:hover  { filter: brightness(1.1); }
+
+.seccion-vm   { background: linear-gradient(135deg, #831843, #BE185D); color: white; transition: all 0.25s ease; }
+.seccion-vm:hover   { filter: brightness(1.1); }
+
+.seccion-pae { background: linear-gradient(135deg, #0C4A6E, #0284C7); color: white; transition: all 0.25s ease; }
+.seccion-pae:hover { filter: brightness(1.1); }
+
+.seccion-ic   { background: linear-gradient(135deg, #3730A3, #4F46E5); color: white; transition: all 0.25s ease; }
+.seccion-ic:hover   { filter: brightness(1.1); }
+
+ 
+  .seccion-titulo { font-size: 15px; font-weight: bold; }
+.seccion-toggle {
+  cursor: pointer;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.seccion-arrow {
+  font-size: 20px;
+  transition: transform 0.3s;
+  margin-left: 10px;
+}
+
+.seccion-arrow.collapsed {
+  transform: rotate(-90deg);
+}
+
+.seccion-content {
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.seccion-content.collapsed {
+  display: none;
+}
+.draft-banner {
+  background: #FFF3CD;
+  border: 1px solid #FFC107;
+  border-radius: 8px;
+  padding: 10px 16px;
+  margin-bottom: 16px;
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.draft-banner.visible { display: flex; }
+.draft-banner span { font-size: 13px; color: #856404; font-weight: bold; }
+.btn-clear-draft {
+  padding: 4px 12px;
+  background: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+}
+  .badge-count { background: rgba(255,255,255,0.3); padding: 2px 8px; border-radius: 10px; font-size: 12px; margin-left: 8px; }
+
+  .estado-general-select {
+    padding: 8px 12px; border-radius: 6px; border: 2px solid rgba(255,255,255,0.5);
+    background: rgba(255,255,255,0.15); color: white; font-size: 13px;
+    font-weight: bold; cursor: pointer; min-width: 200px;
+  }
+  .estado-general-select option { background: #333; color: white; }
+
+  .item-card {
+    background: linear-gradient(180deg, #FFFFFF 0%, #F8FBFF 100%); border: 1px solid rgba(22,59,105,0.08);
+    border-radius: 22px; padding: 22px; margin-bottom: 18px; transition: all 0.28s ease; box-shadow: 0 4px 14px rgba(15,23,42,0.05), 0 1px 2px rgba(15,23,42,0.04); position: relative; overflow: hidden;
+  }
+  .item-card:hover { transform: translateY(-2px); border-color: rgba(45,108,223,0.22); box-shadow: 0 10px 30px rgba(15,23,42,0.08), 0 2px 6px rgba(15,23,42,0.06); }
+  .item-header { display: flex; align-items: flex-start; gap: 18px; margin-bottom: 18px; }
+  .item-codigo { background: linear-gradient(135deg, #163B69, #2D6CDF); color: white; padding: 10px 16px; border-radius: 999px; font-size: 12px; font-weight: 800; letter-spacing: 0.08em; white-space: nowrap; flex-shrink: 0; box-shadow: 0 6px 18px rgba(45,108,223,0.25); }
+  /* ── BADGES POR SECCIÓN ── */
+.item-codigo-cro   { background: linear-gradient(135deg, #163B69, #2D6CDF); box-shadow: 0 6px 18px rgba(45,108,223,0.25); transition: all 0.25s ease; }
+.item-codigo-cro:hover   { background: linear-gradient(135deg, #1e4d8c, #3b82f6); transform: translateY(-2px); box-shadow: 0 10px 24px rgba(45,108,223,0.4); }
+
+.item-codigo-aic  { background: linear-gradient(135deg, #92400E, #D97706); box-shadow: 0 6px 18px rgba(217,119,6,0.25); transition: all 0.25s ease; }
+.item-codigo-aic:hover  { background: linear-gradient(135deg, #b45309, #f59e0b); transform: translateY(-2px); box-shadow: 0 10px 24px rgba(217,119,6,0.4); }
+
+.item-codigo-pt   { background: linear-gradient(135deg, #7F1D1D, #DC2626); box-shadow: 0 6px 18px rgba(220,38,38,0.25); transition: all 0.25s ease; }
+.item-codigo-pt:hover   { background: linear-gradient(135deg, #991b1b, #ef4444); transform: translateY(-2px); box-shadow: 0 10px 24px rgba(220,38,38,0.4); }
+
+.item-codigo-epp   { background: linear-gradient(135deg, #78350F, #B45309); box-shadow: 0 6px 18px rgba(180,83,9,0.25); transition: all 0.25s ease; }
+.item-codigo-epp:hover   { background: linear-gradient(135deg, #92400e, #d97706); transform: translateY(-2px); box-shadow: 0 10px 24px rgba(180,83,9,0.4); }
+
+.item-codigo-covid   { background: linear-gradient(135deg, #14532D, #16A34A); box-shadow: 0 6px 18px rgba(22,163,74,0.25); transition: all 0.25s ease; }
+.item-codigo-covid:hover   { background: linear-gradient(135deg, #166534, #22c55e); transform: translateY(-2px); box-shadow: 0 10px 24px rgba(22,163,74,0.4); }
+
+.item-codigo-dhse   { background: linear-gradient(135deg, #1E3A5F, #2563EB); box-shadow: 0 6px 18px rgba(37,99,235,0.25); transition: all 0.25s ease; }
+.item-codigo-dhse:hover   { background: linear-gradient(135deg, #1e40af, #3b82f6); transform: translateY(-2px); box-shadow: 0 10px 24px rgba(37,99,235,0.4); }
+
+.item-codigo-meh   { background: linear-gradient(135deg, #78350F, #C2410C); box-shadow: 0 6px 18px rgba(194,65,12,0.25); transition: all 0.25s ease; }
+.item-codigo-meh:hover   { background: linear-gradient(135deg, #9a3412, #ea580c); transform: translateY(-2px); box-shadow: 0 10px 24px rgba(194,65,12,0.4); }
+
+.item-codigo-ct   { background: linear-gradient(135deg, #14532D, #15803D); box-shadow: 0 6px 18px rgba(21,128,61,0.25); transition: all 0.25s ease; }
+.item-codigo-ct:hover   { background: linear-gradient(135deg, #166534, #16a34a); transform: translateY(-2px); box-shadow: 0 10px 24px rgba(21,128,61,0.4); }
+
+.item-codigo-spp   { background: linear-gradient(135deg, #7F1D1D, #B91C1C); box-shadow: 0 6px 18px rgba(185,28,28,0.25); transition: all 0.25s ease; }
+.item-codigo-spp:hover   { background: linear-gradient(135deg, #991b1b, #dc2626); transform: translateY(-2px); box-shadow: 0 10px 24px rgba(185,28,28,0.4); }
+
+.item-codigo-irc   { background: linear-gradient(135deg, #1C1917, #44403C); box-shadow: 0 6px 18px rgba(68,64,60,0.25); transition: all 0.25s ease; }
+.item-codigo-irc:hover   { background: linear-gradient(135deg, #292524, #57534e); transform: translateY(-2px); box-shadow: 0 10px 24px rgba(68,64,60,0.4); }
+
+.item-codigo-icp  { background: linear-gradient(135deg, #C55A11, #EA580C); box-shadow: 0 6px 18px rgba(234,88,12,0.25); transition: all 0.25s ease; }
+.item-codigo-icp:hover  { background: linear-gradient(135deg, #c2410c, #f97316); transform: translateY(-2px); box-shadow: 0 10px 24px rgba(234,88,12,0.4); }
+
+.item-codigo-vm   { background: linear-gradient(135deg, #831843, #BE185D); box-shadow: 0 6px 18px rgba(190,24,93,0.25); transition: all 0.25s ease; }
+.item-codigo-vm:hover   { background: linear-gradient(135deg, #9d174d, #db2777); transform: translateY(-2px); box-shadow: 0 10px 24px rgba(190,24,93,0.4); }
+
+.item-codigo-pae { background: linear-gradient(135deg, #0C4A6E, #0284C7); box-shadow: 0 6px 18px rgba(2,132,199,0.25); transition: all 0.25s ease; }
+.item-codigo-pae:hover { background: linear-gradient(135deg, #075985, #0ea5e9); transform: translateY(-2px); box-shadow: 0 10px 24px rgba(2,132,199,0.4); }
+
+.item-codigo-ic   { background: linear-gradient(135deg, #3730A3, #4F46E5); box-shadow: 0 6px 18px rgba(79,70,229,0.25); transition: all 0.25s ease; }
+.item-codigo-ic:hover   { background: linear-gradient(135deg, #4338ca, #6366f1); transform: translateY(-2px); box-shadow: 0 10px 24px rgba(79,70,229,0.4); }
+ 
+  .item-descripcion { font-size: 14px; color: #1E293B; line-height: 1.75; font-weight: 500; }
+
+  .item-respuesta { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 18px; }
+  .btn-respuesta { padding: 11px 22px; border: 1.5px solid #CBD5E1; border-radius: 999px; background: white; cursor: pointer; font-size: 13px; font-weight: 700; transition: all 0.22s ease; color: #475569; min-width: 110px; }
+  .btn-respuesta:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(15,23,42,0.08); } 
+  .btn-respuesta.cumple.active { background: linear-gradient(135deg, #16A34A, #22C55E); border-color: #16A34A; color: white; box-shadow: 0 10px 24px rgba(34,197,94,0.28); }
+  .btn-respuesta.nocumple.active { background: linear-gradient(135deg, #DC2626, #EF4444); border-color: #DC2626; color: white; box-shadow: 0 10px 24px rgba(239,68,68,0.28); }
+  .btn-respuesta.na.active { background: linear-gradient(135deg, #64748B, #94A3B8); border-color: #64748B; color: white; box-shadow: 0 10px 24px rgba(100,116,139,0.22); }
+
+  /* Estilos de evidencias por ítem eliminados — ver sección EVIDENCIAS GENERALES */
+  /* ── EVIDENCIAS GENERALES ── */
+  .evid-gen-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 12px; }
+  @media (max-width: 600px) { .evid-gen-grid { grid-template-columns: 1fr; } }
+  .evid-gen-slot { border: 2px dashed #C7D2E2; border-radius: 16px; min-height: 120px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; background: #F8FAFC; transition: all 0.22s ease; position: relative; overflow: hidden; padding: 16px 10px; text-align: center; }
+  .evid-gen-slot:hover { border-color: #2D6CDF; background: #EFF6FF; }
+  .evid-gen-slot.has-image { border: 2px solid #2D6CDF; background: white; padding: 0; }
+  .evid-gen-slot .slot-icon { font-size: 28px; margin-bottom: 6px; }
+  .evid-gen-slot .slot-label { font-size: 11px; color: #888; font-weight: bold; }
+  .evid-gen-slot input[type=file] { display: none; }
+  .evid-gen-preview { width: 100%; height: 120px; object-fit: cover; border-radius: 14px; display: block; }
+  .evid-gen-delete { position: absolute; top: 6px; right: 6px; width: 24px; height: 24px; background: rgba(200,0,0,0.85); color: white; border: none; border-radius: 50%; font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center; line-height: 1; }
+  .evid-gen-counter { font-size: 12px; color: #555; margin-top: 10px; font-weight: bold; }
+  /* ── OPORTUNIDADES DE MEJORA ── */
+  .oportunidades-textarea { width: 100%; padding: 14px 16px; border: 1.5px solid #D8E1EC; border-radius: 16px; font-size: 13px; background: #F8FAFC; transition: all 0.22s ease; resize: vertical; min-height: 140px; font-family: Arial, sans-serif; }
+  .oportunidades-textarea:focus { outline: none; border-color: #2D6CDF; background: white; box-shadow: 0 0 0 4px rgba(45,108,223,0.12); }
+  /* ── REVISIÓN: evidencias y oportunidades ── */
+  .rev-evid-grid { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 8px; }
+  .rev-evid-img { width: 100px; height: 80px; object-fit: cover; border-radius: 10px; border: 1px solid #ddd; }
+  .rev-oportunidades { font-size: 13px; color: #333; white-space: pre-wrap; background: #F8FAFC; border-radius: 10px; padding: 12px 14px; border: 1px solid #E2E8F0; margin-top: 8px; }
+ 
+  .firma-container { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media (max-width: 600px) { .firma-container { grid-template-columns: 1fr; } }
+  .firma-box { border: 2px solid #ddd; border-radius: 8px; overflow: hidden; }
+  .firma-titulo { background: #1F4E79; color: white; padding: 10px; text-align: center; font-weight: bold; font-size: 13px; }
+  canvas { width: 100%; height: 150px; cursor: crosshair; touch-action: none; display: block; }
+  .firma-actions { display: flex; gap: 8px; padding: 8px; background: #f5f5f5; justify-content: flex-end; }
+  .btn-limpiar { padding: 6px 14px; background: #C55A11; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; }
+
+  .btn-enviar { width: 100%; padding: 18px; background: #1E6B3C; color: white; border: none; border-radius: 10px; font-size: 18px; font-weight: bold; cursor: pointer; transition: background 0.3s; margin-top: 10px; }
+  .btn-enviar:hover { background: #155c32; }
+  .btn-enviar:disabled { background: #999; cursor: not-allowed; }
+
+  #success-screen { display: none; min-height: 100vh; background: linear-gradient(135deg, #1E6B3C, #27ae60); align-items: center; justify-content: center; }
+  .success-box { background: white; border-radius: 16px; padding: 50px 40px; text-align: center; max-width: 450px; width: 90%; }
+  .success-icon { font-size: 60px; margin-bottom: 20px; }
+  .success-title { font-size: 24px; font-weight: bold; color: #1E6B3C; margin-bottom: 10px; }
+  .success-msg { color: #666; margin-bottom: 20px; }
+  .success-codigo { font-size: 18px; font-weight: bold; color: #1F4E79; }
+  .btn-nueva { margin-top: 24px; padding: 14px 30px; background: #1F4E79; color: white; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; }
+
+  .loading-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 9999; align-items: center; justify-content: center; flex-direction: column; gap: 16px; }
+  .loading-overlay.visible { display: flex; }
+  .spinner { width: 50px; height: 50px; border: 5px solid rgba(255,255,255,0.3); border-top: 5px solid white; border-radius: 50%; animation: spin 1s linear infinite; }
+ .loading-text { color: white; font-size: 16px; font-weight: bold; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+ 
+ select { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+ .rev-card {
+  background: rgba(255,255,255,0.82); backdrop-filter: blur(14px);
+  border: 1px solid rgba(255,255,255,0.7); border-radius: 28px;
+  margin-bottom: 20px; overflow: hidden;
+  box-shadow: 0 12px 40px rgba(15,23,42,0.08);
+  transition: all 0.25s ease;
+}
+.rev-card:hover { transform: translateY(-2px); box-shadow: 0 18px 48px rgba(15,23,42,0.12); }
+
+.rev-card-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 24px; cursor: pointer; user-select: none; transition: filter 0.2s;
+}
+.rev-card-header:hover { filter: brightness(1.1); }
+
+.rev-card-title { font-size: 15px; font-weight: 800; color: white; display: flex; align-items: center; gap: 10px; }
+.rev-card-arrow { font-size: 18px; color: white; transition: transform 0.3s; }
+.rev-card-arrow.collapsed { transform: rotate(-90deg); }
+
+.rev-card-body { padding: 0 24px; max-height: 2000px; transition: max-height 0.4s ease, padding 0.3s ease; overflow: hidden; }
+.rev-card-body.collapsed { max-height: 0; padding: 0 24px; }
+
+.rev-item-row {
+  display: flex; align-items: flex-start; padding: 10px 0;
+  border-bottom: 1px solid #eee; gap: 12px; transition: background 0.2s;
+  border-radius: 8px; padding: 10px 8px;
+}
+.rev-item-row:hover { background: #f8fafc; }
+
+.rev-badge {
+  padding: 3px 10px; border-radius: 999px;
+  font-size: 11px; font-weight: 800; white-space: nowrap;
+  color: white; flex-shrink: 0;
+}
+.rev-btn-editar {
+  padding: 6px 14px; color: white; border: none;
+  border-radius: 6px; cursor: pointer; font-size: 12px;
+  font-weight: 600; transition: all 0.2s; white-space: nowrap;
+}
+.rev-btn-editar:hover { filter: brightness(1.2); transform: translateY(-1px); }
+</style>
+</head>
+<body>
+
+<div class="loading-overlay" id="loading">
+  <div class="spinner"></div>
+  <div class="loading-text">Enviando inspección...</div>
+</div>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-bg"></div>
+  <div class="login-overlay"></div>
+  <div class="login-glow-1"></div>
+  <div class="login-glow-2"></div>
+
+  <div class="login-header">
+    <img src="logo.png" alt="UNITELEC" onerror="this.style.display='none'" />
+    <span class="login-header-text">Sistema HSE</span>
+  </div>
+
+  <div class="login-main">
+    <div class="login-left">
+      <div class="login-left-title">Plataforma Corporativa</div>
+      <h1>Sistema de<br><span>Inspección de</span><br>Seguridad y Salud</h1>
+      <p class="login-left-desc">Gestione sus inspecciones HSE de manera eficiente, segura y profesional.</p>
+      <div class="login-features">
+        <div class="login-feature">
+          <div class="login-feature-icon">🛡️</div>
+          <div class="login-feature-text"><strong>Seguridad</strong><span>Protección de datos garantizada</span></div>
+        </div>
+        <div class="login-feature">
+          <div class="login-feature-icon">📊</div>
+          <div class="login-feature-text"><strong>Eficiencia</strong><span>Optimice procesos y tiempos</span></div>
+        </div>
+        <div class="login-feature">
+          <div class="login-feature-icon">✅</div>
+          <div class="login-feature-text"><strong>Cumplimiento</strong><span>Estándares HSE internacionales</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="login-card">
+      <div class="login-card-logo">
+        <img src="logo.png" alt="UNITELEC" onerror="this.style.display='none';document.getElementById('logo-fb').style.display='block'" />
+        <div id="logo-fb" class="login-card-logo-fallback" style="display:none;">UNITELEC</div>
+        <div class="login-card-logo-sub">Unión de Técnicos Electromecánicos</div>
+      </div>
+      <div class="login-card-divider"></div>
+      <div class="login-card-title">Bienvenido de nuevo</div>
+      <div class="login-card-subtitle">Inicia sesión para continuar</div>
+
+      <label class="login-field-label">Correo Corporativo *</label>
+      <div class="login-field-wrap">
+        <span class="login-field-icon">✉</span>
+        <input type="email" id="login-email" class="login-input-field" placeholder="nombre@unitelec.com.pe" autocomplete="email" />
+      </div>
+
+      <label class="login-field-label">Contraseña *</label>
+      <div class="login-field-wrap">
+        <span class="login-field-icon">🔒</span>
+        <input type="password" id="login-password" class="login-input-field" placeholder="Contraseña" style="padding-right:44px;" />
+        <span id="ojo" onclick="togglePassword()" style="position:absolute;right:14px;top:50%;transform:translateY(-50%);cursor:pointer;color:rgba(255,255,255,0.3);">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+            <circle cx="12" cy="12" r="3"/>
+          </svg>
+        </span>
+      </div>
+
+      <button class="btn-login" onclick="login()">Iniciar sesión →</button>
+
+      <div class="login-ms-divider">o continúa con</div>
+      <button class="login-ms-btn" type="button">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg" width="16" height="16" />
+        Microsoft
+      </button>
+
+      <div class="login-error" id="login-error"></div>
+      <div class="login-box" style="display:none;"></div>
+    </div>
+  </div>
+
+  <div class="login-footer">
+    <span class="login-footer-copy">© 2025 UNITELEC HSE. Todos los derechos reservados.</span>
+    <div class="login-footer-badge">
+      <div class="login-footer-badge-icon">🛡️</div>
+      <span>Seguridad · Nuestro compromiso, tu protección</span>
+    </div>
+  </div>
+</div>
+
+<!-- FORMULARIO -->
+<div id="form-screen">
+  <div class="header">
+    <div style="display:flex;align-items:center;gap:14px;">
+      <img src="logo.png" alt="UNITELEC" style="height:38px;object-fit:contain;filter:brightness(0) invert(1);" onerror="this.style.display='none'" />
+      <div>
+        <div class="header-logo">UNITELEC HSE</div>
+        <div class="header-title">Inspección de Seguridad y Salud</div>
+      </div>
+    </div>
+    <div style="text-align:right">
+      <div class="header-user" id="header-user"></div>
+      <button class="btn-logout" onclick="logout()">Salir</button>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="draft-banner" id="draft-banner">
+  <span>📋 Tienes un borrador guardado. ¿Deseas continuar donde lo dejaste?</span>
+  <div style="display:flex;gap:8px;">
+    <button class="btn-clear-draft" onclick="limpiarBorrador()">🗑️ Descartar</button>
+  </div>
+</div>
+
+<div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+
+    <!-- DATOS GENERALES -->
+    <div class="card">
+      <div class="card-title">📋 1. Información General</div>
+      <div class="form-grid">
+
+        <div class="form-group">
+          <label>Cliente *</label>
+          <select id="cliente" required>
+            <option value="">Seleccionar...</option>
+            <option>PLUZ</option>
+            <option>ISA</option>
+            <option>ORYGEN</option>
+            <option>ATLANTICA</option>
+            <option>ENGIE</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Responsable de la Inspección *</label>
+          <select id="responsable" required>
+            <option value="">Seleccionar...</option>
+            <option>ALI RONALD COLCHADO VEGA</option>
+            <option>MYRIAM LAURA CAMPOS MARTINEZ</option>
+            <option>JOSE PAULO CESAR GUERRERO CABRERA</option>
+            <option>CLOUS LYSEN CUYOTUPA NUÑEZ</option>
+            <option>CLAUDIA DAYANA MONTES HUAMANÍ</option>
+            <option>JUAN ERNESTO AGUILAR GUILLEN</option>
+            <option>JEREME JESUS VELASQUEZ LOPEZ</option>
+            <option>JANSEN ANTHONY QUISPE LAGUNA</option>
+            <option>JORGE GONZALO RIVAS TOVALINO</option>
+            <option>MAXWELL ALEXIS BARTRA BURGOS</option>
+            <option>RAMIRO CALISAYA RAMIREZ</option>
+            <option>HUGO DELFIN PIMENTEL MALVACEDA</option>
+            <option>MARCO PAOLO SOVERO HUAMANI</option>
+            <option>MANUEL CASTRO TAFUR</option>
+            <option>CHARLES ENOC PAREDES SAAVEDRA</option>
+            <option>ROBESPIERRE BAUDELAIRE MENA ARANA</option>
+            <option>ALFREDO ALEJANDRO QUEVEDO VALDERRAMA</option>
+            <option>MIRIAM DEYSI SONCCO QUISPE</option>
+            <option>ALEJANDRO ENRIQUE JULCA SALVADOR</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Fecha de Apertura *</label>
+          <input type="date" id="fecha_apertura" required />
+        </div>
+
+        <div class="form-group">
+          <label>Estado de Ejecución *</label>
+          <select id="estado_ejecucion" required>
+            <option value="">Seleccionar...</option>
+            <option>Abierto</option>
+            <option>En progreso</option>
+            <option selected>Cerrado</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Proyecto *</label>
+          <select id="proyecto" required>
+            <option value="">Seleccionar...</option>
+            <option>ANILLO VIAL</option>
+            <option>MANTENIMIENTO DE TRANSFORMADORES PLUZ</option>
+            <option>MANTENIMIENTO DE TRANSFORMADORES ORYGEN</option>
+            <option>MANTENIMIENTO DE LÍNEAS</option>
+            <option>CAUDIVILLA</option>
+            <option>YAROS</option>
+            <option>CHIMÚ</option>
+            <option>CHEVEZ</option>
+            <option>PICO</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Área Inspectora *</label>
+          <select id="area_inspectora" required>
+            <option value="">Seleccionar...</option>
+            <option>SEGURIDAD LABORAL</option>
+            <option>OPERACIONES</option>
+            <option>AUDITORÍA</option>
+            <option>GERENCIA GENERAL</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Área Inspeccionada *</label>
+          <select id="area_inspeccionada" required>
+            <option value="">Seleccionar...</option>
+            <option>OBRAS CIVILES</option>
+            <option>MONTAJE ELECTROMECÁNICO</option>
+            <option>MM.TT.LÍNEAS</option>
+            <option>MM.TT.TRAFOS</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Empresa Inspectora *</label>
+          <select id="empresa_inspectora" required>
+            <option value="">Seleccionar...</option>
+            <option>Interno</option>
+            <option>Externo</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Tipo de Inspección *</label>
+          <select id="tipo_inspeccion" required>
+            <option value="Estándar" selected>Estándar</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Distrito *</label>
+          <select id="distrito" required>
+            <option value="">Seleccionar...</option>
+            <option>Ancón</option><option>Ate</option><option>Barranco</option>
+            <option>Breña</option><option>Carabayllo</option><option>Chaclacayo</option>
+            <option>Chorrillos</option><option>Cieneguilla</option><option>Comas</option>
+            <option>El Agustino</option><option>Independencia</option><option>Jesús María</option>
+            <option>La Molina</option><option>La Victoria</option><option>Lince</option>
+            <option>Los Olivos</option><option>Lurigancho</option><option>Lurín</option>
+            <option>Magdalena del Mar</option><option>Miraflores</option><option>Pachacámac</option>
+            <option>Pueblo Libre</option><option>Puente Piedra</option><option>Rímac</option>
+            <option>San Borja</option><option>San Isidro</option>
+            <option>San Juan de Lurigancho</option><option>San Juan de Miraflores</option>
+            <option>San Luis</option><option>San Martín de Porres</option>
+            <option>San Miguel</option><option>Santa Anita</option>
+            <option>Santiago de Surco</option><option>Surquillo</option>
+            <option>Villa El Salvador</option><option>Villa María del Triunfo</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Dirección *</label>
+          <input type="text" id="direccion" placeholder="Av. Ejemplo 123" required />
+        </div>
+
+        <div class="form-group">
+          <label>Tipo de Orden de Trabajo *</label>
+          <select id="tipo_orden" required>
+            <option value="">Seleccionar...</option>
+            <option>LCL</option>
+            <option>OT</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>N° de Trabajo *</label>
+          <input type="text" id="num_trabajo" placeholder="LCL-XXXXXXXXXX" required />
+        </div>
+
+        <div class="form-group full">
+          <label>Descripción de la Tarea *</label>
+          <textarea id="descripcion_tarea" placeholder="Describe la tarea a inspeccionar..." required></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>N° de Contrato</label>
+          <input type="number" id="num_contrato" placeholder="5200000000" />
+        </div>
+
+        <div class="form-group">
+          <label>Jefe de Cuadrilla *</label>
+          <input type="text" id="jefe_cuadrilla" placeholder="Apellidos y Nombres" required />
+        </div>
+
+        <div class="form-group">
+          <label>DNI / C.E Jefe de Cuadrilla *</label>
+          <input type="number" id="dni_jefe" placeholder="12345678" required />
+        </div>
+
+        <div class="form-group">
+          <label>Supervisor Operativo</label>
+          <input type="text" id="supervisor" placeholder="Apellidos y Nombres" />
+        </div>
+
+        <div class="form-group">
+          <label>DNI/CE Supervisor Operativo</label>
+          <input type="number" id="dni_supervisor" placeholder="12345678" />
+        </div>
+
+        <div class="form-group">
+          <label>Subproceso *</label>
+          <select id="subproceso" required>
+            <option value="">Seleccionar...</option>
+            <option>Mantenimiento Líneas AT</option>
+            <option>Mantenimiento SETS</option>
+            <option>Obras Líneas AT</option>
+            <option>Obras SETs AT</option>
+            <option>Mantenimiento de Transformadores</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Tipo de Actividad *</label>
+          <select id="tipo_actividad" required>
+            <option value="">Seleccionar...</option>
+            <option>Eléctrico</option>
+            <option>Excavación</option>
+            <option>Izaje de cargas</option>
+            <option>Trabajos en altura</option>
+            <option>Trabajos en espacios confinados</option>
+            <option>Civil</option>
+            <option>Otros</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Instalación Inspeccionada *</label>
+          <select id="instalacion" required>
+            <option value="">Seleccionar...</option>
+            <option>SET (SET de Transmisión)</option>
+            <option>Vía Pública</option>
+            <option>Centrales Hidroeléctricas</option>
+            <option>Centrales Térmicas</option>
+            <option>Redes AT</option>
+          </select>
+        </div>
+
+      </div>
+    </div>
+
+   <!-- CINCO REGLAS DE ORO -->
+<div class="card">
+  <div class="seccion-header seccion-cro">
+    <div class="seccion-toggle" onclick="toggleSeccion('cro')">
+      <div class="seccion-titulo">CINCO REGLAS DE ORO <span class="badge-count">5 ítems</span></div>
+      <span class="seccion-arrow" id="arrow-cro">▼</span>
+    </div>
+    <select class="estado-general-select" onchange="aplicarEstadoGeneral('cro', this.value)">
+      <option value="">-- Estado general --</option>
+      <option value="Cumple">Todos CUMPLE</option>
+      <option value="No cumple">Todos NO CUMPLE</option>
+      <option value="N/A">Todos N/A</option>
+    </select>
+  </div>
+  <div class="seccion-content" id="content-cro">
+    <div id="items-cro"></div>
+  </div>
+</div>
+
+<!-- AUTORIZACIÓN PARA INGRESO A CIRCUITO -->
+<div class="card">
+  <div class="seccion-header seccion-aic">
+    <div class="seccion-toggle" onclick="toggleSeccion('aic')">
+      <div class="seccion-titulo">AUTORIZACIÓN PARA INGRESO A CIRCUITO <span class="badge-count">3 ítems</span></div>
+      <span class="seccion-arrow" id="arrow-aic">▼</span>
+    </div>
+    <select class="estado-general-select" onchange="aplicarEstadoGeneral('aic', this.value)">
+      <option value="">-- Estado general --</option>
+      <option value="Cumple">Todos CUMPLE</option>
+      <option value="No cumple">Todos NO CUMPLE</option>
+      <option value="N/A">Todos N/A</option>
+    </select>
+  </div>
+  <div class="seccion-content" id="content-aic">
+    <div id="items-aic"></div>
+  </div>
+</div>
+
+<!-- PROCEDIMIENTO DE TRABAJO -->
+<div class="card">
+  <div class="seccion-header seccion-pt">
+    <div class="seccion-toggle" onclick="toggleSeccion('pt')">
+      <div class="seccion-titulo">PROCEDIMIENTO DE TRABAJO <span class="badge-count">5 ítems</span></div>
+      <span class="seccion-arrow" id="arrow-pt">▼</span>
+    </div>
+    <select class="estado-general-select" onchange="aplicarEstadoGeneral('pt', this.value)">
+      <option value="">-- Estado general --</option>
+      <option value="Cumple">Todos CUMPLE</option>
+      <option value="No cumple">Todos NO CUMPLE</option>
+      <option value="N/A">Todos N/A</option>
+    </select>
+  </div>
+  <div class="seccion-content" id="content-pt">
+    <div id="items-pt"></div>
+  </div>
+</div>
+
+<!-- EPP -->
+<div class="card">
+  <div class="seccion-header seccion-epp">
+    <div class="seccion-toggle" onclick="toggleSeccion('epp')">
+      <div class="seccion-titulo">EPP <span class="badge-count">7 ítems</span></div>
+      <span class="seccion-arrow" id="arrow-epp">▼</span>
+    </div>
+    <select class="estado-general-select" onchange="aplicarEstadoGeneral('epp', this.value)">
+      <option value="">-- Estado general --</option>
+      <option value="Cumple">Todos CUMPLE</option>
+      <option value="No cumple">Todos NO CUMPLE</option>
+      <option value="N/A">Todos N/A</option>
+    </select>
+  </div>
+  <div class="seccion-content" id="content-epp">
+    <div id="items-epp"></div>
+  </div>
+</div>
+
+<!-- COVID -->
+<div class="card">
+  <div class="seccion-header seccion-covid">
+    <div class="seccion-toggle" onclick="toggleSeccion('covid')">
+      <div class="seccion-titulo">COVID <span class="badge-count">6 ítems</span></div>
+      <span class="seccion-arrow" id="arrow-covid">▼</span>
+    </div>
+    <select class="estado-general-select" onchange="aplicarEstadoGeneral('covid', this.value)">
+      <option value="">-- Estado general --</option>
+      <option value="Cumple">Todos CUMPLE</option>
+      <option value="No cumple">Todos NO CUMPLE</option>
+      <option value="N/A">Todos N/A</option>
+    </select>
+  </div>
+  <div class="seccion-content" id="content-covid">
+    <div id="items-covid"></div>
+  </div>
+</div>
+
+<!-- DOCUMENTOS HSE -->
+<div class="card">
+  <div class="seccion-header seccion-dhse">
+    <div class="seccion-toggle" onclick="toggleSeccion('dhse')">
+      <div class="seccion-titulo">DOCUMENTOS HSE <span class="badge-count">3 ítems</span></div>
+      <span class="seccion-arrow" id="arrow-dhse">▼</span>
+    </div>
+    <select class="estado-general-select" onchange="aplicarEstadoGeneral('dhse', this.value)">
+      <option value="">-- Estado general --</option>
+      <option value="Cumple">Todos CUMPLE</option>
+      <option value="No cumple">Todos NO CUMPLE</option>
+      <option value="N/A">Todos N/A</option>
+    </select>
+  </div>
+  <div class="seccion-content" id="content-dhse">
+    <div id="items-dhse"></div>
+  </div>
+</div>
+
+<!-- MATERIALES, EQUIPOS Y HERRAMIENTAS -->
+<div class="card">
+  <div class="seccion-header seccion-meh">
+    <div class="seccion-toggle" onclick="toggleSeccion('meh')">
+      <div class="seccion-titulo">MATERIALES, EQUIPOS Y HERRAMIENTAS <span class="badge-count">3 ítems</span></div>
+      <span class="seccion-arrow" id="arrow-meh">▼</span>
+    </div>
+    <select class="estado-general-select" onchange="aplicarEstadoGeneral('meh', this.value)">
+      <option value="">-- Estado general --</option>
+      <option value="Cumple">Todos CUMPLE</option>
+      <option value="No cumple">Todos NO CUMPLE</option>
+      <option value="N/A">Todos N/A</option>
+    </select>
+  </div>
+  <div class="seccion-content" id="content-meh">
+    <div id="items-meh"></div>
+  </div>
+</div>
+
+<!-- CONDICIONES DE TRABAJO -->
+<div class="card">
+  <div class="seccion-header seccion-ct">
+    <div class="seccion-toggle" onclick="toggleSeccion('ct')">
+      <div class="seccion-titulo">CONDICIONES DE TRABAJO <span class="badge-count">4 ítem</span></div>
+      <span class="seccion-arrow" id="arrow-ct">▼</span>
+    </div>
+    <select class="estado-general-select" onchange="aplicarEstadoGeneral('ct', this.value)">
+      <option value="">-- Estado general --</option>
+      <option value="Cumple">Todos CUMPLE</option>
+      <option value="No cumple">Todos NO CUMPLE</option>
+      <option value="N/A">Todos N/A</option>
+    </select>
+  </div>
+  <div class="seccion-content" id="content-ct">
+    <div id="items-ct"></div>
+  </div>
+</div>
+
+<!-- SEÑALIZACIÓN Y PROTECCIÓN PÚBLICA -->
+<div class="card">
+  <div class="seccion-header seccion-spp">
+    <div class="seccion-toggle" onclick="toggleSeccion('spp')">
+      <div class="seccion-titulo">SEÑALIZACIÓN Y PROTECCIÓN PÚBLICA <span class="badge-count">4 ítem</span></div>
+      <span class="seccion-arrow" id="arrow-spp">▼</span>
+    </div>
+    <select class="estado-general-select" onchange="aplicarEstadoGeneral('spp', this.value)">
+      <option value="">-- Estado general --</option>
+      <option value="Cumple">Todos CUMPLE</option>
+      <option value="No cumple">Todos NO CUMPLE</option>
+      <option value="N/A">Todos N/A</option>
+    </select>
+  </div>
+  <div class="seccion-content" id="content-spp">
+    <div id="items-spp"></div>
+  </div>
+</div>
+
+<!-- IDENTIFICACIÓN DE RIESGOS Y CHARLA DE 5 MINUTOS -->
+<div class="card">
+  <div class="seccion-header seccion-irc">
+    <div class="seccion-toggle" onclick="toggleSeccion('irc')">
+      <div class="seccion-titulo">IDENTIFICACIÓN DE RIESGOS Y CHARLA DE 5 MINUTOS <span class="badge-count">4 ítems</span></div>
+      <span class="seccion-arrow" id="arrow-irc">▼</span>
+    </div>
+    <select class="estado-general-select" onchange="aplicarEstadoGeneral('irc', this.value)">
+      <option value="">-- Estado general --</option>
+      <option value="Cumple">Todos CUMPLE</option>
+      <option value="No cumple">Todos NO CUMPLE</option>
+      <option value="N/A">Todos N/A</option>
+    </select>
+  </div>
+  <div class="seccion-content" id="content-irc">
+    <div id="items-irc"></div>
+  </div>
+</div>
+
+<!-- IDENTIFICACIÓN Y COMPETENCIA DEL PERSONAL-->
+<div class="card">
+  <div class="seccion-header seccion-icp">
+    <div class="seccion-toggle" onclick="toggleSeccion('icp')">
+      <div class="seccion-titulo">IDENTIFICACIÓN Y COMPETENCIA DEL PERSONAL <span class="badge-count">4 ítems</span></div>
+      <span class="seccion-arrow" id="arrow-icp">▼</span>
+    </div>
+    <select class="estado-general-select" onchange="aplicarEstadoGeneral('icp', this.value)">
+      <option value="">-- Estado general --</option>
+      <option value="Cumple">Todos CUMPLE</option>
+      <option value="No cumple">Todos NO CUMPLE</option>
+      <option value="N/A">Todos N/A</option>
+    </select>
+  </div>
+  <div class="seccion-content" id="content-icp">
+    <div id="items-icp"></div>
+  </div>
+</div>
+
+<!-- VEHÍCULOS Y MAQUINARIAS -->
+<div class="card">
+  <div class="seccion-header seccion-vm">
+    <div class="seccion-toggle" onclick="toggleSeccion('vm')">
+      <div class="seccion-titulo">VEHÍCULOS Y MAQUINARIAS <span class="badge-count">2 ítems</span></div>
+      <span class="seccion-arrow" id="arrow-vm">▼</span>
+    </div>
+    <select class="estado-general-select" onchange="aplicarEstadoGeneral('vm', this.value)">
+      <option value="">-- Estado general --</option>
+      <option value="Cumple">Todos CUMPLE</option>
+      <option value="No cumple">Todos NO CUMPLE</option>
+      <option value="N/A">Todos N/A</option>
+    </select>
+  </div>
+  <div class="seccion-content" id="content-vm">
+    <div id="items-vm"></div>
+  </div>
+</div>
+
+<!-- PRIMEROS AUXILIOS Y EMERGENCIAS-->
+<div class="card">
+  <div class="seccion-header seccion-pae">
+    <div class="seccion-toggle" onclick="toggleSeccion('pae')">
+      <div class="seccion-titulo">PRIMEROS AUXILIOS Y EMERGENCIAS <span class="badge-count">4 ítem</span></div>
+      <span class="seccion-arrow" id="arrow-pae">▼</span>
+    </div>
+    <select class="estado-general-select" onchange="aplicarEstadoGeneral('pae', this.value)">
+      <option value="">-- Estado general --</option>
+      <option value="Cumple">Todos CUMPLE</option>
+      <option value="No cumple">Todos NO CUMPLE</option>
+      <option value="N/A">Todos N/A</option>
+    </select>
+  </div>
+  <div class="seccion-content" id="content-pae">
+    <div id="items-pae"></div>
+  </div>
+</div>
+
+<!-- INFRAESTRUCTURA Y CARTELES -->
+<div class="card">
+  <div class="seccion-header seccion-ic">
+    <div class="seccion-toggle" onclick="toggleSeccion('ic')">
+      <div class="seccion-titulo">INFRAESTRUCTURA Y CARTELES <span class="badge-count">4 ítem</span></div>
+      <span class="seccion-arrow" id="arrow-ic">▼</span>
+    </div>
+    <select class="estado-general-select" onchange="aplicarEstadoGeneral('ic', this.value)">
+      <option value="">-- Estado general --</option>
+      <option value="Cumple">Todos CUMPLE</option>
+      <option value="No cumple">Todos NO CUMPLE</option>
+      <option value="N/A">Todos N/A</option>
+    </select>
+  </div>
+  <div class="seccion-content" id="content-ic">
+    <div id="items-ic"></div>
+  </div>
+</div>
+
+   
+    <!-- EVIDENCIAS GENERALES -->
+    <div class="card">
+      <div class="card-title">📷 Evidencias Generales</div>
+      <div style="font-size:13px;color:#666;margin-bottom:10px;">Adjunte hasta 3 fotografías que evidencien la inspección realizada.</div>
+      <div class="evid-gen-grid">
+        <div class="evid-gen-slot" id="slot-gen-1" onclick="triggerEvidGen(1)">
+          <input type="file" id="evid-gen-1" accept=".jpg,.jpeg,.png" onchange="cargarEvidGen(1,this)" />
+          <div class="slot-icon">📷</div>
+          <div class="slot-label">Foto 1</div>
+        </div>
+        <div class="evid-gen-slot" id="slot-gen-2" onclick="triggerEvidGen(2)">
+          <input type="file" id="evid-gen-2" accept=".jpg,.jpeg,.png" onchange="cargarEvidGen(2,this)" />
+          <div class="slot-icon">📷</div>
+          <div class="slot-label">Foto 2</div>
+        </div>
+        <div class="evid-gen-slot" id="slot-gen-3" onclick="triggerEvidGen(3)">
+          <input type="file" id="evid-gen-3" accept=".jpg,.jpeg,.png" onchange="cargarEvidGen(3,this)" />
+          <div class="slot-icon">📷</div>
+          <div class="slot-label">Foto 3</div>
+        </div>
+      </div>
+      <div class="evid-gen-counter" id="evid-gen-counter">0 de 3 imágenes cargadas</div>
+    </div>
+
+    <!-- OPORTUNIDADES DE MEJORA -->
+    <div class="card">
+      <div class="card-title">💡 Oportunidades de Mejora</div>
+      <textarea id="oportunidades_mejora" class="oportunidades-textarea" rows="6"
+        placeholder="Ingrese las oportunidades de mejora identificadas durante la inspección..."></textarea>
+    </div>
+
+    <!-- FIRMAS -->
+    <div class="card">
+      <div class="card-title">✍️ 2. Firmas</div>
+      <div class="firma-container">
+        <div class="firma-box">
+          <div class="firma-titulo">INSPECTOR HSE</div>
+          <canvas id="canvas-inspector" ontouchstart="startDraw(event,'inspector')" ontouchmove="draw(event,'inspector')" ontouchend="stopDraw('inspector')" onmousedown="startDraw(event,'inspector')" onmousemove="draw(event,'inspector')" onmouseup="stopDraw('inspector')" onmouseleave="stopDraw('inspector')"></canvas>
+          <div class="firma-actions"><button class="btn-limpiar" onclick="limpiarFirma('inspector')">Limpiar</button></div>
+          <div style="padding:8px;font-size:12px;color:#666;text-align:center" id="nombre-inspector"></div>
+        </div>
+        <div class="firma-box">
+          <div class="firma-titulo">JEFE DE CUADRILLA</div>
+          <canvas id="canvas-jefe" ontouchstart="startDraw(event,'jefe')" ontouchmove="draw(event,'jefe')" ontouchend="stopDraw('jefe')" onmousedown="startDraw(event,'jefe')" onmousemove="draw(event,'jefe')" onmouseup="stopDraw('jefe')" onmouseleave="stopDraw('jefe')"></canvas>
+          <div class="firma-actions"><button class="btn-limpiar" onclick="limpiarFirma('jefe')">Limpiar</button></div>
+          <div style="padding:8px;font-size:12px;color:#666;text-align:center" id="nombre-jefe"></div>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn-enviar" onclick="mostrarRevision()" id="btn-enviar">SIGUIENTE</button>
+  </div>
+</div>
+
+<!-- REVISIÓN -->
+<div id="revision-screen" style="display:none;">
+  <div class="header">
+    <div style="display:flex;align-items:center;gap:14px;">
+      <div>
+        <div class="header-logo">UNITELEC HSE</div>
+        <div class="header-title">Revisión de Inspección</div>
+      </div>
+    </div>
+    <div style="text-align:right">
+      <div class="header-user" id="header-user-rev"></div>
+    </div>
+  </div>
+  <div class="container">
+
+    <div style="background:#FFF3CD;border:1px solid #FFC107;border-radius:8px;padding:12px 16px;margin-bottom:16px;font-size:13px;color:#856404;font-weight:bold;">
+      ⚠️ Revisa toda la información antes de enviar. Una vez enviada no podrás modificarla.
+    </div>
+
+    <!-- DATOS GENERALES -->
+    <div class="card">
+      <div class="card-title" style="display:flex;justify-content:space-between;align-items:center;">
+        📋 1. Información General
+        <button onclick="editarSeccion('datos')" style="padding:6px 14px;background:#1F4E79;color:white;border:none;border-radius:6px;cursor:pointer;font-size:12px;">✏️ Editar</button>
+      </div>
+      <div id="rev-datos"></div>
+    </div>
+
+   <!-- CINCO REGLAS DE ORO -->
+<div class="rev-card">
+  <div class="rev-card-header" style="background:linear-gradient(135deg,#163B69,#2D6CDF);" onclick="toggleRevCard('cro')">
+    <div class="rev-card-title"> 🛡️CINCO REGLAS DE ORO</div>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <button class="rev-btn-editar" style="background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.4);" onclick="event.stopPropagation();editarSeccion('cro')">✏️ Editar</button>
+      <span class="rev-card-arrow" id="rev-arrow-cro">▼</span>
+    </div>
+  </div>
+  <div class="rev-card-body" id="rev-body-cro">
+    <div id="rev-cro" style="padding:8px 0;"></div>
+  </div>
+</div>
+
+<!-- AUTORIZACIÓN PARA INGRESO A CIRCUITO-->
+<div class="rev-card">
+  <div class="rev-card-header" style="background:linear-gradient(135deg,#92400E,#D97706);" onclick="toggleRevCard('aic')">
+    <div class="rev-card-title">⚡ AUTORIZACIÓN PARA INGRESO A CIRCUITO</div>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <button class="rev-btn-editar" style="background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.4);" onclick="event.stopPropagation();editarSeccion('aic')">✏️ Editar</button>
+      <span class="rev-card-arrow" id="rev-arrow-aic">▼</span>
+    </div>
+  </div>
+  <div class="rev-card-body" id="rev-body-aic">
+    <div id="rev-aic" style="padding:8px 0;"></div>
+  </div>
+</div>
+
+<!-- PROCEDIMIENTO DE TRABAJO -->
+<div class="rev-card">
+  <div class="rev-card-header" style="background:linear-gradient(135deg,#7F1D1D,#DC2626);" onclick="toggleRevCard('pt')">
+    <div class="rev-card-title">📑 PROCEDIMIENTO DE TRABAJO </div>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <button class="rev-btn-editar" style="background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.4);" onclick="event.stopPropagation();editarSeccion('pt')">✏️ Editar</button>
+      <span class="rev-card-arrow" id="rev-arrow-pt">▼</span>
+    </div>
+  </div>
+  <div class="rev-card-body" id="rev-body-pt">
+    <div id="rev-pt" style="padding:8px 0;"></div>
+  </div>
+</div>
+
+<!-- EPP -->
+<div class="rev-card">
+  <div class="rev-card-header" style="background:linear-gradient(135deg,#78350F,#B45309);" onclick="toggleRevCard('epp')">
+    <div class="rev-card-title">🦺 EPP</div>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <button class="rev-btn-editar" style="background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.4);" onclick="event.stopPropagation();editarSeccion('epp')">✏️ Editar</button>
+      <span class="rev-card-arrow" id="rev-arrow-epp">▼</span>
+    </div>
+  </div>
+  <div class="rev-card-body" id="rev-body-epp">
+    <div id="rev-epp" style="padding:8px 0;"></div>
+  </div>
+</div>
+
+<!-- COVID -->
+<div class="rev-card">
+  <div class="rev-card-header" style="background:linear-gradient(135deg,#14532D,#16A34A);" onclick="toggleRevCard('covid')">
+    <div class="rev-card-title">😷 COVID</div>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <button class="rev-btn-editar" style="background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.4);" onclick="event.stopPropagation();editarSeccion('covid')">✏️ Editar</button>
+      <span class="rev-card-arrow" id="rev-arrow-covid">▼</span>
+    </div>
+  </div>
+  <div class="rev-card-body" id="rev-body-covid">
+    <div id="rev-covid" style="padding:8px 0;"></div>
+  </div>
+</div>
+
+<!-- DOCUMENTOS HSE -->
+<div class="rev-card">
+  <div class="rev-card-header" style="background:linear-gradient(135deg,#1E3A5F,#2563EB);" onclick="toggleRevCard('dhse')">
+    <div class="rev-card-title">📂 DOCUMENTOS HSE</div>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <button class="rev-btn-editar" style="background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.4);" onclick="event.stopPropagation();editarSeccion('dhse')">✏️ Editar</button>
+      <span class="rev-card-arrow" id="rev-arrow-dhse">▼</span>
+    </div>
+  </div>
+  <div class="rev-card-body" id="rev-body-dhse">
+    <div id="rev-dhse" style="padding:8px 0;"></div>
+  </div>
+</div>
+
+<!-- MATERIALES, EQUIPOS Y HERRAMIENTAS -->
+<div class="rev-card">
+  <div class="rev-card-header" style="background:linear-gradient(135deg,#78350F,#C2410C);" onclick="toggleRevCard('meh')">
+    <div class="rev-card-title">🔧 MATERIALES, EQUIPOS Y HERRAMIENTAS</div>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <button class="rev-btn-editar" style="background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.4);" onclick="event.stopPropagation();editarSeccion('meh')">✏️ Editar</button>
+      <span class="rev-card-arrow" id="rev-arrow-meh">▼</span>
+    </div>
+  </div>
+  <div class="rev-card-body" id="rev-body-meh">
+    <div id="rev-meh" style="padding:8px 0;"></div>
+  </div>
+</div>
+
+<!-- CONDICIONES DE TRABAJO -->
+<div class="rev-card">
+  <div class="rev-card-header" style="background:linear-gradient(135deg,#14532D,#15803D);" onclick="toggleRevCard('ct')">
+    <div class="rev-card-title">🏗️ CONDICIONES DE TRABAJO</div>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <button class="rev-btn-editar" style="background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.4);" onclick="event.stopPropagation();editarSeccion('ct')">✏️ Editar</button>
+      <span class="rev-card-arrow" id="rev-arrow-ct">▼</span>
+    </div>
+  </div>
+  <div class="rev-card-body" id="rev-body-ct">
+    <div id="rev-ct" style="padding:8px 0;"></div>
+  </div>
+</div>
+
+<!-- SEÑALIZACIÓN Y PROTECCIÓN PÚBLICA -->
+<div class="rev-card">
+  <div class="rev-card-header" style="background:linear-gradient(135deg,#7F1D1D,#B91C1C);" onclick="toggleRevCard('spp')">
+    <div class="rev-card-title">🚧 SEÑALIZACIÓN Y PROTECCIÓN PÚBLICA</div>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <button class="rev-btn-editar" style="background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.4);" onclick="event.stopPropagation();editarSeccion('spp')">✏️ Editar</button>
+      <span class="rev-card-arrow" id="rev-arrow-spp">▼</span>
+    </div>
+  </div>
+  <div class="rev-card-body" id="rev-body-spp">
+    <div id="rev-spp" style="padding:8px 0;"></div>
+  </div>
+</div>
+
+<!-- IDENTIFICACIÓN DE RIESGOS Y CHARLA DE 5 MINUTOS -->
+<div class="rev-card">
+  <div class="rev-card-header" style="background:linear-gradient(135deg,#1C1917,#44403C);" onclick="toggleRevCard('irc')">
+    <div class="rev-card-title">📋 IDENTIFICACIÓN DE RIESGOS Y CHARLA DE 5 MINUTOS</div>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <button class="rev-btn-editar" style="background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.4);" onclick="event.stopPropagation();editarSeccion('irc')">✏️ Editar</button>
+      <span class="rev-card-arrow" id="rev-arrow-irc">▼</span>
+    </div>
+  </div>
+  <div class="rev-card-body" id="rev-body-irc">
+    <div id="rev-irc" style="padding:8px 0;"></div>
+  </div>
+</div>
+
+<!-- IDENTIFICACIÓN Y COMPETENCIA DEL PERSONAL -->
+<div class="rev-card">
+  <div class="rev-card-header" style="background:linear-gradient(135deg,#C55A11,#EA580C);" onclick="toggleRevCard('icp')">
+    <div class="rev-card-title">👷 IDENTIFICACIÓN Y COMPETENCIA DEL PERSONAL</div>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <button class="rev-btn-editar" style="background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.4);" onclick="event.stopPropagation();editarSeccion('icp')">✏️ Editar</button>
+      <span class="rev-card-arrow" id="rev-arrow-icp">▼</span>
+    </div>
+  </div>
+  <div class="rev-card-body" id="rev-body-icp">
+    <div id="rev-icp" style="padding:8px 0;"></div>
+  </div>
+</div>
+
+<!-- VEHÍCULOS Y MAQUINARIAS -->
+<div class="rev-card">
+  <div class="rev-card-header" style="background:linear-gradient(135deg,#831843,#BE185D);" onclick="toggleRevCard('vm')">
+    <div class="rev-card-title">🚚 VEHÍCULOS Y MAQUINARIAS</div>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <button class="rev-btn-editar" style="background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.4);" onclick="event.stopPropagation();editarSeccion('vm')">✏️ Editar</button>
+      <span class="rev-card-arrow" id="rev-arrow-vm">▼</span>
+    </div>
+  </div>
+  <div class="rev-card-body" id="rev-body-vm">
+    <div id="rev-vm" style="padding:8px 0;"></div>
+  </div>
+</div>
+
+<!-- PRIMEROS AUXILIOS Y EMERGENCIAS -->
+<div class="rev-card">
+  <div class="rev-card-header" style="background:linear-gradient(135deg,#0C4A6E,#0284C7);" onclick="toggleRevCard('pae')">
+    <div class="rev-card-title">🚑 PRIMEROS AUXILIOS Y EMERGENCIAS</div>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <button class="rev-btn-editar" style="background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.4);" onclick="event.stopPropagation();editarSeccion('pae')">✏️ Editar</button>
+      <span class="rev-card-arrow" id="rev-arrow-pae">▼</span>
+    </div>
+  </div>
+  <div class="rev-card-body" id="rev-body-pae">
+    <div id="rev-pae" style="padding:8px 0;"></div>
+  </div>
+</div>
+
+<!-- INFRAESTRUCTURA Y CARTELES -->
+<div class="rev-card">
+  <div class="rev-card-header" style="background:linear-gradient(135deg,#3730A3,#4F46E5);" onclick="toggleRevCard('ic')">
+    <div class="rev-card-title">🏢 INFRAESTRUCTURA Y CARTELES / Fluidos</div>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <button class="rev-btn-editar" style="background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.4);" onclick="event.stopPropagation();editarSeccion('ic')">✏️ Editar</button>
+      <span class="rev-card-arrow" id="rev-arrow-ic">▼</span>
+    </div>
+  </div>
+  <div class="rev-card-body" id="rev-body-ic">
+    <div id="rev-ic" style="padding:8px 0;"></div>
+  </div>
+</div>
+
+    <!-- REVISIÓN: EVIDENCIAS GENERALES -->
+    <div class="card">
+      <div class="card-title">📷 Evidencias Generales</div>
+      <div id="rev-evidencias" class="rev-evid-grid"></div>
+    </div>
+
+    <!-- REVISIÓN: OPORTUNIDADES DE MEJORA -->
+    <div class="card">
+      <div class="card-title">💡 Oportunidades de Mejora</div>
+      <div id="rev-oportunidades" class="rev-oportunidades"></div>
+    </div>
+
+    <!-- BOTONES -->
+    <div style="display:flex;gap:12px;margin-top:10px;">
+      <button onclick="volverFormulario()" style="flex:1;padding:16px;background:#666;color:white;border:none;border-radius:10px;font-size:16px;font-weight:bold;cursor:pointer;">
+        ← Volver a editar
+      </button>
+      <button onclick="enviarInspeccion()" id="btn-confirmar" style="flex:2;padding:16px;background:#1E6B3C;color:white;border:none;border-radius:10px;font-size:18px;font-weight:bold;cursor:pointer;">
+        📤 CONFIRMAR Y ENVIAR
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ÉXITO -->
+<div id="success-screen" style="display:none;min-height:100vh;background-image:url('fondo.png');background-size:cover;background-position:center;background-repeat:no-repeat;align-items:center;justify-content:center;">
+  <div class="success-box" style="background:rgba(255,255,255,0.92);backdrop-filter:blur(8px);border-radius:16px;padding:50px 40px;text-align:center;max-width:450px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,0.5);">
+    <img src="logo.png" alt="UNITELEC" style="width:180px;margin-bottom:20px;object-fit:contain;" onerror="this.style.display='none'" />
+    <div style="font-size:60px;margin-bottom:20px;filter:grayscale(1) brightness(0.25);">✅</div>
+    <div style="font-size:24px;font-weight:bold;color:#1E6B3C;margin-bottom:10px;">¡Inspección Enviada!</div>
+    <div style="color:#666;margin-bottom:20px;">Registrada exitosamente en el sistema UNITELEC.</div>
+    <div style="font-size:18px;font-weight:bold;color:#1F4E79;" id="success-codigo"></div>
+    <br>
+    <div style="font-size:13px;color:#888">Recibirás el PDF por correo en los próximos minutos.</div>
+    <button style="margin-top:24px;padding:14px 30px;background:#1F4E79;color:white;border:none;border-radius:8px;font-size:16px;cursor:pointer;" onclick="location.reload()">Nueva Inspección</button>
+  </div>
+</div>
+
+<script>
+// ─── USUARIOS ───
+const USUARIOS = {
+  'klavado@unitelec.com.pe':     { password: '75357275', nombre: 'K. LAVADO' },
+  'djulca@unitelec.com.pe':      { password: '76503586', nombre: 'D. JULCA' },
+  'jacruz@unitelec.com.pe':      { password: '71618904', nombre: 'J. CRUZ' },
+  'mbartra@unitelec.com.pe':     { password: '70663144', nombre: 'M. BARTRA' },
+  'jrivas@unitelec.com.pe':      { password: '73641293', nombre: 'J. RIVAS' },
+  'acolchado@unitelec.com.pe':   { password: 'unitelec4827', nombre: 'A. COLCHADO' },
+  'mcampos@rscconstructores.pe': { password: 'unitelec1509', nombre: 'M. CAMPOS' },
+  'jguerrero@unitelec.com.pe':   { password: 'unitelec7364', nombre: 'J. GUERRERO' },
+  'ccuyotupa@unitelec.com.pe':   { password: 'unitelec2918', nombre: 'C. CUYOTUPA' },
+  'cmontes@unitelec.com.pe':     { password: 'unitelec6043', nombre: 'C. MONTES' },
+  'jaguilar@unitelec.com.pe':    { password: 'unitelec8751', nombre: 'J. AGUILAR' },
+  'jvelasquez@unitelec.com.pe':  { password: '72886354', nombre: 'J. VELASQUEZ' },
+  'jansenquispe@unitelec.com.pe':{ password: 'unitelec4420', nombre: 'J. QUISPE' },
+  'msovero@unitelec.com.pe':     { password: 'unitelec9873', nombre: 'M. SOVERO' },
+  'hpimentel@unitelec.com.pe':   { password: 'unitelec1285', nombre: 'H. PIMENTEL' },
+  'mcastro@unitelec.com.pe':     { password: 'unitelec5601', nombre: 'M. CASTRO' },
+  'rcalisaya@unitelec.com.pe':   { password: 'unitelec7748', nombre: 'R. CALISAYA' },
+  'cparedes@unitelec.com.pe':     { password: 'unitelec2369', nombre: 'C. PAREDES' },
+  'rmena@unitelec.com.pe':   { password: 'unitelec6932', nombre: 'R. MENA' },
+  'aquevedo@unitelec.com.pe':     { password: 'unitelec5601', nombre: 'A. QUEVEDO' },
+  'msoncco@unitelec.com.pe':   { password: 'unitelec7748', nombre: 'M. SONCCO' },
+  'ajulca@unitelec.com.pe':   { password: 'unitelec7748', nombre: 'A. JULCA' },
+  'flavado@unitelec.com.pe':   { password: '75356469', nombre: 'F. LAVADO' },
+};
+
+// ─── CLOUDINARY CONFIG ───
+const CLOUDINARY_CLOUD = 'df17abwyo';
+const CLOUDINARY_PRESET = 'unitelec_hse';
+
+async function comprimirImagen(base64, maxWidth = 800) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = function() {
+      const canvas = document.createElement('canvas');
+      let w = img.width, h = img.height;
+      if (w > maxWidth) { h = Math.round(h * maxWidth / w); w = maxWidth; }
+      canvas.width = w; canvas.height = h;
+      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+      resolve(canvas.toDataURL('image/jpeg', 0.6));
+    };
+    img.src = base64;
+  });
+}
+
+async function subirACloudinary(base64, nombre, folder) {
+  if (!base64) return null;
+  try {
+    const comp = await comprimirImagen(base64);
+    const fd = new FormData();
+    fd.append('file', comp);
+    fd.append('upload_preset', CLOUDINARY_PRESET);
+    fd.append('public_id', `${nombre}_${Date.now()}`);
+    fd.append('folder', `inspecciones/${folder}`);
+    const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/image/upload`, {
+      method: 'POST', body: fd
+    });
+    const d = await res.json();
+    return d.secure_url || null;
+  } catch(e) { console.error('Error Cloudinary:', e); return null; }
+}
+
+async function subirArchivoACloudinary(file, nombre) {
+  if (!file) return null;
+  try {
+    const comp = await new Promise(resolve => {
+      const r = new FileReader();
+      r.onload = async e => resolve(await comprimirImagen(e.target.result));
+      r.readAsDataURL(file);
+    });
+    const fd = new FormData();
+    fd.append('file', comp);
+    fd.append('upload_preset', CLOUDINARY_PRESET);
+    fd.append('public_id', `${nombre}_${Date.now()}`);
+    fd.append('folder', 'inspecciones/evidencias');
+    const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/image/upload`, {
+      method: 'POST', body: fd
+    });
+    const d = await res.json();
+    return d.secure_url || null;
+  } catch(e) { console.error('Error evidencia:', e); return null; }
+}
+
+// ─── ITEMS CHECKLIST ───
+// ── CINCO REGLAS DE ORO ──
+const itemsCRO = [
+  {id:'1_1', codigo:'1.1', campo:'1.1. Corte efectivo de todas las fuentes de tensión', desc:'1.1. Corte efectivo de todas las fuentes de tensión'},
+  {id:'1_2', codigo:'1.2', campo:'1.2. Enclavamiento o bloqueo', desc:'1.2. Enclavamiento o bloqueo'},
+  {id:'1_3', codigo:'1.3', campo:'1.3. Verificación de ausencia de tensión', desc:'1.3. Verificación de ausencia de tensión'},
+  {id:'1_4', codigo:'1.4', campo:'1.4. Puesta a tierra y en cortocircuito', desc:'1.4. Puesta a tierra y en cortocircuito'},
+  {id:'1_5', codigo:'1.5', campo:'1.5. Señalización y delimitación de la zona de trabajo', desc:'1.5. Señalización y delimitación de la zona de trabajo'},
+];
+// ── AUTORIZACIÓN PARA INGRESO A CIRCUITO ──
+const itemsAIC = [
+  {id:'2_1', codigo:'2.1', campo:'2.1. Con boleta de liberación', desc:'2.1. Con boleta de liberación'},
+  {id:'2_2', codigo:'2.2', campo:'2.2. Con tarjeta de seguridad personal', desc:'2.2. Con tarjeta de seguridad personal'},
+  {id:'2_3', codigo:'2.3', campo:'2.3. Con clave de maniobra y autorización', desc:'2.3. Con clave de maniobra y autorización'},
+];
+// ── PROCEDIMIENTO DE TRABAJO ──
+const itemsPT = [
+  {id:'3_1', codigo:'3.1', campo:'3.1. Cuenta con orden o permiso de trabajo', desc:'3.1. Cuenta con orden o permiso de trabajo'},
+  {id:'3_2', codigo:'3.2', campo:'3.2. Colaboradores se encuentran en la SCTR (salud y pensión)', desc:'3.2. Colaboradores se encuentran en la SCTR (salud y pensión)'},
+  {id:'3_3', codigo:'3.3', campo:'3.3. Actividad dispone de procedimientos de trabajo vigentes', desc:'3.3. Actividad dispone de procedimientos de trabajo vigentes'},
+  {id:'3_4', codigo:'3.4', campo:'3.4. Cumple con procedimientos de trabajo seguro y normas técnicas', desc:'3.4. Cumple con procedimientos de trabajo seguro y normas técnicas'},
+  {id:'3_5', codigo:'3.5', campo:'3.5. Dispone de planos o guías de las instalaciones vigentes', desc:'3.5. Dispone de planos o guías de las instalaciones vigentes'},
+];
+// ── EPP ──
+const itemsEPP = [
+  {id:'4_1', codigo:'4.1', campo:'4.1. Utiliza casco de seguridad con sistema de fijación en buen estado y normalizado', desc:'4.1. Utiliza casco de seguridad con sistema de fijación en buen estado y normalizado'},
+  {id:'4_2', codigo:'4.2', campo:'4.2. Utiliza calzado de seguridad según la actividad, en buen estado y normalizado', desc:'4.2. Utiliza calzado de seguridad según la actividad, en buen estado y normalizado'},
+  {id:'4_3', codigo:'4.3', campo:'4.3. Utiliza guantes de seguridad según la actividad, en buen estado y normalizado', desc:'4.3. Utiliza guantes de seguridad según la actividad, en buen estado y normalizado'},
+  {id:'4_4', codigo:'4.4', campo:'4.4. Utiliza guantes dieléctricos en BT o MT en buen estado y normalizado', desc:'4.4. Utiliza guantes dieléctricos en BT o MT en buen estado y normalizado'},
+  {id:'4_5', codigo:'4.5', campo:'4.5. Utiliza protección facial de acuerdo a la actividad, en buen estado y normalizado', desc:'4.5. Utiliza protección facial de acuerdo a la actividad, en buen estado y normalizado'},
+  {id:'4_6', codigo:'4.6', campo:'4.6. Utiliza sistema de protección contra caídas de altura (arnés de cuerpo completo, anclaje retráctil, faja y línea de anclaje, estrobo)', desc:'4.6. Utiliza sistema de protección contra caídas de altura (arnés de cuerpo completo, anclaje retráctil, faja y línea de anclaje, estrobo)'},
+  {id:'4_7', codigo:'4.7', campo:'4.7. Utiliza ropa de trabajo adecuada para la tarea, en buen estado y normalizado', desc:'4.7. Utiliza ropa de trabajo adecuada para la tarea, en buen estado y normalizado'},
+  {id:'4_8', codigo:'4.8', campo:'4.8. Utiliza protector ocular, en buen estado y normalizado', desc:'4.8. Utiliza protector ocular, en buen estado y normalizado'},
+  {id:'4_9', codigo:'4.9', campo:'4.9. Utiliza protectores auditivos, en buen estado y normalizado', desc:'4.9. Utiliza protectores auditivos, en buen estado y normalizado'},
+  {id:'4_10', codigo:'4.10', campo:'4.10. Utiliza chaleco reflectante, en buen estado y normalizado', desc:'4.10. Utiliza chaleco reflectante, en buen estado y normalizado'},
+  {id:'4_11', codigo:'4.11', campo:'4.11. Utiliza mangas dieléctricas en buen estado y normalizado', desc:'4.11. Utiliza mangas dieléctricas en buen estado y normalizado'},
+  {id:'4_12', codigo:'4.12', campo:'4.12. Utiliza protección respiratoria según la actividad, en buen estado y normalizado', desc:'4.12. Utiliza protección respiratoria según la actividad, en buen estado y normalizado'},
+];
+ // ── COVID ──
+const itemsCOVID = [
+  {id:'5_1', codigo:'5.1', campo:'5.1. Se le realiza a todos los colaboradores el control de su T° al inicio y al final de la jornada', desc:'5.1. Se le realiza a todos los colaboradores el control de su T° al inicio y al final de la jornada'},
+  {id:'5_2', codigo:'5.2', campo:'5.2. Se le realiza a todos los colaboradores la evaluación de sintomatología', desc:'5.2. Se le realiza a todos los colaboradores la evaluación de sintomatología'},
+  {id:'5_3', codigo:'5.3', campo:'5.3. Se tienen dispensadores de alcohol, lavamanos, pediluvios para limpieza de calzado, en distintos puntos de la obra', desc:'5.3. Se tienen dispensadores de alcohol, lavamanos, pediluvios para limpieza de calzado, en distintos puntos de la obra'},
+  {id:'5_4', codigo:'5.4', campo:'5.4. Se tiene carteles informativos en distintos puntos de la obra', desc:'5.4. Se tiene carteles informativos en distintos puntos de la obra'},
+  {id:'5_5', codigo:'5.5', campo:'5.5. Todo el personal hace uso de sus mascarillas, caretas, etc.', desc:'5.5. Todo el personal hace uso de sus mascarillas, caretas, etc.'},
+  {id:'5_6', codigo:'5.6', campo:'5.6. Todo el personal mantiene su distanciamiento y respeta el 50% de aforo en los ambientes', desc:'5.6. Todo el personal mantiene su distanciamiento y respeta el 50% de aforo en los ambientes'},
+];
+// ── DOCUMENTOS HSE ──
+const itemsDHSE = [
+  {id:'6_1', codigo:'6.1', campo:'6.1. Se cuenta con matriz IPERC, AST o charla pre operacional, plan de trabajo (ex TF-11) y/o PETAR para el desarrollo de la actividad', desc:'6.1. Se cuenta con matriz IPERC, AST o charla pre operacional, plan de trabajo (ex TF-11) y/o PETAR para el desarrollo de la actividad'},
+  {id:'6_2', codigo:'6.2', campo:'6.2. Cuenta con las hojas de seguridad de los productos que se emplean en la actividad', desc:'6.2. Cuenta con las hojas de seguridad de los productos que se emplean en la actividad'},
+  {id:'6_3', codigo:'6.3', campo:'6.3. Cuenta con check list de inspección de herramientas de poder, manuales, inspección de EPPs, equipos, vehículos, botiquines, extintores, etc. en la zona de trabajo', desc:'6.3. Cuenta con check list de inspección de herramientas de poder, manuales, inspección de EPPs, equipos, vehículos, botiquines, extintores, etc. en la zona de trabajo'},
+];
+// ── MATERIALES, EQUIPOS Y HERRAMIENTAS ──
+const itemsMEH = [
+  {id:'7_1', codigo:'7.1', campo:'7.1. Utiliza los materiales indicados', desc:'7.1. Utiliza los materiales indicados'},
+  {id:'7_2', codigo:'7.2', campo:'7.2. Utiliza los equipos indicados y estos tienen su cinta de inspección del mes', desc:'7.2. Utiliza los equipos indicados y estos tienen su cinta de inspección del mes'},
+  {id:'7_3', codigo:'7.3', campo:'7.3. Utiliza las herramientas indicadas y estos tienen su cinta de inspección del mes', desc:'7.3. Utiliza las herramientas indicadas y estos tienen su cinta de inspección del mes'},
+];
+// ── CONDICIONES DE TRABAJO ──
+const itemsCT = [
+  {id:'8_1', codigo:'8.1', campo:'8.1. Orden y/o limpieza en zona de trabajo', desc:'8.1. Orden y/o limpieza en zona de trabajo'},
+  {id:'8_2', codigo:'8.2', campo:'8.2. Cuentan con medios de comunicación', desc:'8.2. Cuentan con medios de comunicación'},
+  {id:'8_3', codigo:'8.3', campo:'8.3. El colaborador trabaja en condiciones físicas y psíquicas adecuadas', desc:'8.3. El colaborador trabaja en condiciones físicas y psíquicas adecuadas'},
+  {id:'8_4', codigo:'8.4', campo:'8.4. Supervisión adecuada de la tarea', desc:'8.4. Supervisión adecuada de la tarea'}
+];
+// ── SEÑALIZACIÓN Y PROTECCIÓN PÚBLICA ──
+const itemsSPP = [
+  {id:'9_1', codigo:'9.1', campo:'9.1. Se cuenta con señalización preventiva, informativa y restrictiva de acuerdo con la actividad', desc:'9.1. Se cuenta con señalización preventiva, informativa y restrictiva de acuerdo con la actividad'},
+  {id:'9_2', codigo:'9.2', campo:'9.2. La zona de trabajo se encuentra delimitada adecuadamente', desc:'9.2. La zona de trabajo se encuentra delimitada adecuadamente'},
+  {id:'9_3', codigo:'9.3', campo:'9.3. Existen medidas para proteger a peatones, vehículos y terceros', desc:'9.3. Existen medidas para proteger a peatones, vehículos y terceros'},
+  {id:'9_4', codigo:'9.4', campo:'9.4. Se mantiene libre y seguro el acceso al área de trabajo', desc:'9.4. Se mantiene libre y seguro el acceso al área de trabajo'},
+];
+// ── IDENTIFICACIÓN DE RIESGOS Y CHARLA DE 5 MINUTOS ──
+const itemsIRC = [
+  {id:'10_1', codigo:'10.1', campo:'10.1. Se realizó charla de 5 minutos antes de iniciar las actividades', desc:'10.1. Se realizó charla de 5 minutos antes de iniciar las actividades'},
+  {id:'10_2', codigo:'10.2', campo:'10.2. Los riesgos de la actividad fueron identificados por el personal', desc:'10.2. Los riesgos de la actividad fueron identificados por el personal'},
+  {id:'10_3', codigo:'10.3', campo:'10.3. Los controles establecidos son conocidos por todos los trabajadores', desc:'10.3. Los controles establecidos son conocidos por todos los trabajadores'},
+  {id:'10_4', codigo:'10.4', campo:'10.4. El personal firma los registros correspondientes de la charla realizada', desc:'10.4. El personal firma los registros correspondientes de la charla realizada'},
+];
+// ── IDENTIFICACIÓN Y COMPETENCIA DEL PERSONAL ──
+const itemsICP = [
+  {id:'11_1', codigo:'11.1', campo:'11.1. El personal cuenta con fotocheck o identificación visible', desc:'11.1. El personal cuenta con fotocheck o identificación visible'},
+  {id:'11_2', codigo:'11.2', campo:'11.2. El personal cuenta con capacitaciones vigentes para la actividad', desc:'11.2. El personal cuenta con capacitaciones vigentes para la actividad'},
+  {id:'11_3', codigo:'11.3', campo:'11.3. El personal cuenta con certificaciones requeridas para trabajos de alto riesgo', desc:'11.3. El personal cuenta con certificaciones requeridas para trabajos de alto riesgo'},
+  {id:'11_4', codigo:'11.4', campo:'11.4. El personal demuestra conocimiento de los procedimientos aplicables', desc:'11.4. El personal demuestra conocimiento de los procedimientos aplicables'},
+];
+// ── VEHÍCULOS Y MAQUINARIAS ──
+const itemsVM = [
+  {id:'12_1', codigo:'12.1', campo:'12.1. Vehículos y maquinaria cuentan con check list de pre uso', desc:'12.1. Vehículos y maquinaria cuentan con check list de pre uso'},
+  {id:'12_2', codigo:'12.2', campo:'12.2. Vehículos y maquinaria se encuentran en condiciones operativas seguras', desc:'12.2. Vehículos y maquinaria se encuentran en condiciones operativas seguras'},
+  {id:'12_3', codigo:'12.3', campo:'12.3. Cuentan con extintor, conos, tacos y elementos de emergencia', desc:'12.3. Cuentan con extintor, conos, tacos y elementos de emergencia'},
+  {id:'12_4', codigo:'12.4', campo:'12.4. El operador cuenta con licencia y autorización vigente', desc:'12.4. El operador cuenta con licencia y autorización vigente'},
+];
+// ── PRIMEROS AUXILIOS Y EMERGENCIAS ──
+const itemsPAE = [
+  {id:'13_1', codigo:'13.1', campo:'13.1. Se dispone de botiquín implementado y vigente', desc:'13.1. Se dispone de botiquín implementado y vigente'},
+  {id:'13_2', codigo:'13.2', campo:'13.2. Se dispone de extintor operativo y vigente', desc:'13.2. Se dispone de extintor operativo y vigente'},
+  {id:'13_3', codigo:'13.3', campo:'13.3. El personal conoce el procedimiento de respuesta ante emergencias', desc:'13.3. El personal conoce el procedimiento de respuesta ante emergencias'},
+  {id:'13_4', codigo:'13.4', campo:'13.4. Se cuenta con directorio de emergencia actualizado', desc:'13.4. Se cuenta con directorio de emergencia actualizado'},
+];
+// ── INFRAESTRUCTURA Y CARTELES ──
+const itemsIC = [
+  {id:'14_1', codigo:'14.1', campo:'14.1. Los accesos y vías de circulación se encuentran en condiciones seguras', desc:'14.1. Los accesos y vías de circulación se encuentran en condiciones seguras'},
+  {id:'14_2', codigo:'14.2', campo:'14.2. Existen carteles obligatorios y reglamentarios visibles', desc:'14.2. Existen carteles obligatorios y reglamentarios visibles'},
+  {id:'14_3', codigo:'14.3', campo:'14.3. Los ambientes de trabajo presentan condiciones adecuadas de orden y limpieza', desc:'14.3. Los ambientes de trabajo presentan condiciones adecuadas de orden y limpieza'},
+  {id:'14_4', codigo:'14.4', campo:'14.4. La infraestructura no presenta daños que comprometan la seguridad', desc:'14.4. La infraestructura no presenta daños que comprometan la seguridad'},
+];
+
+// ─── ESTADO ───
+let usuarioActual = '';
+let respuestas = {};
+let drawing = { inspector: false, jefe: false };
+let lastPos = {};
+let firmas = { inspector: null, jefe: null };
+
+// ─── LOGIN ───
+function login() {
+  const email = document.getElementById('login-email').value.trim().toLowerCase();
+  const password = document.getElementById('login-password').value;
+  const error = document.getElementById('login-error');
+  if (USUARIOS[email] && USUARIOS[email].password === password) {
+    usuarioActual = email;
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('form-screen').style.display = 'block';
+    document.getElementById('header-user').textContent = email;
+    document.getElementById('nombre-inspector').textContent = USUARIOS[email].nombre;
+    const hoy = new Date().toISOString().split('T')[0];
+    const fi = document.getElementById('fecha_apertura');
+    fi.value = hoy; fi.min = hoy; fi.max = hoy;
+    renderItems();
+    initCanvas();
+    cargarBorrador();
+    updateProgress();
+    error.style.display = 'none';
+  } else {
+    error.style.display = 'block';
+    error.textContent = '❌ Correo o contraseña incorrectos.';
+  }
+}
+
+document.addEventListener('keypress', e => {
+  if (e.key === 'Enter' && document.getElementById('login-screen').style.display !== 'none') login();
+});
+
+function togglePassword() {
+  const input = document.getElementById('login-password');
+  const ojo = document.getElementById('ojo');
+  if (input.type === 'password') {
+    input.type = 'text';
+    ojo.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>`;
+  } else {
+    input.type = 'password';
+    ojo.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`;
+  }
+}
+
+function logout() { if (confirm('¿Deseas cerrar sesión?')) location.reload(); }
+
+// ─── RENDER ITEMS ───
+function renderItems() {
+  renderSeccion('items-cro',   itemsCRO,   'cro');
+  renderSeccion('items-aic',   itemsAIC,   'aic');
+  renderSeccion('items-pt',    itemsPT,    'pt');
+  renderSeccion('items-epp',   itemsEPP,   'epp');
+  renderSeccion('items-covid', itemsCOVID, 'covid');
+  renderSeccion('items-dhse',  itemsDHSE,  'dhse');
+  renderSeccion('items-meh',   itemsMEH,   'meh');
+  renderSeccion('items-ct',    itemsCT,    'ct');
+  renderSeccion('items-spp',   itemsSPP,   'spp');
+  renderSeccion('items-irc',   itemsIRC,   'irc');
+  renderSeccion('items-icp',   itemsICP,   'icp');
+  renderSeccion('items-vm',    itemsVM,    'vm');
+  renderSeccion('items-pae',   itemsPAE,   'pae');
+  renderSeccion('items-ic',    itemsIC,    'ic');
+}
+
+function renderSeccion(containerId, items, tipo) {
+  document.getElementById(containerId).innerHTML = items.map(item => itemHTML(item, tipo)).join('');
+}
+
+function itemHTML(item, tipo) {
+  const cc = tipo ? `item-codigo-${tipo}` : 'item-codigo-cro';
+  return `
+    <div class="item-card" id="card-${item.id}">
+      <div class="item-header">
+        <span class="item-codigo ${cc}">${item.codigo}</span>
+        <span class="item-descripcion">${item.desc}</span>
+      </div>
+      <div class="item-respuesta">
+        <button class="btn-respuesta cumple" id="btn-${item.id}-cumple" onclick="setResp('${item.id}','Cumple')">Cumple</button>
+        <button class="btn-respuesta nocumple" id="btn-${item.id}-nocumple" onclick="setResp('${item.id}','No cumple')">No cumple</button>
+        <button class="btn-respuesta na" id="btn-${item.id}-na" onclick="setResp('${item.id}','N/A')">N/A</button>
+      </div>
+    </div>`;
+}
+
+// ─── RESPUESTAS ───
+function setResp(id, val) {
+  respuestas[id] = val;
+  ['cumple','nocumple','na'].forEach(t => document.getElementById(`btn-${id}-${t}`)?.classList.remove('active'));
+  const m = {'Cumple':'cumple','No cumple':'nocumple','N/A':'na'};
+  document.getElementById(`btn-${id}-${m[val]}`)?.classList.add('active');
+  updateProgress();
+}
+function toggleRevCard(sec) {
+  const body = document.getElementById(`rev-body-${sec}`);
+  const arrow = document.getElementById(`rev-arrow-${sec}`);
+  body.classList.toggle('collapsed');
+  arrow.classList.toggle('collapsed');
+}
+function toggleSeccion(sec) {
+  const content = document.getElementById(`content-${sec}`);
+  const arrow = document.getElementById(`arrow-${sec}`);
+  content.classList.toggle('collapsed');
+  arrow.classList.toggle('collapsed');
+}
+
+function aplicarEstadoGeneral(sec, val) {
+  if (!val) return;
+  const mapa = {
+    'cro':   itemsCRO,
+    'aic':   itemsAIC,
+    'pt':    itemsPT,
+    'epp':   itemsEPP,
+    'covid': itemsCOVID,
+    'dhse':  itemsDHSE,
+    'meh':   itemsMEH,
+    'ct':    itemsCT,
+    'spp':   itemsSPP,
+    'irc':   itemsIRC,
+    'icp':   itemsICP,
+    'vm':    itemsVM,
+    'pae':   itemsPAE,
+    'ic':    itemsIC,
+  };
+  const items = mapa[sec];
+  if (!items) return;
+  items.forEach(item => setResp(item.id, val));
+  // Resetear el select para que muestre el placeholder
+  const selects = document.querySelectorAll(`[onchange*="'${sec}'"]`);
+  selects.forEach(s => s.value = '');
+}
+
+// ─── EVIDENCIAS GENERALES ───
+function triggerEvidGen(n) {
+  const slot = document.getElementById(`slot-gen-${n}`);
+  if (!slot.classList.contains('has-image')) {
+    document.getElementById(`evid-gen-${n}`).click();
+  }
+}
+function cargarEvidGen(n, input) {
+  if (!input.files?.[0]) return;
+  const file = input.files[0];
+  const ext = file.name.split('.').pop().toLowerCase();
+  if (!['jpg','jpeg','png'].includes(ext)) {
+    alert('Solo se aceptan imágenes JPG, JPEG o PNG.');
+    input.value = '';
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = e => {
+    const slot = document.getElementById(`slot-gen-${n}`);
+    slot.innerHTML = `
+      <img src="${e.target.result}" class="evid-gen-preview" />
+      <button class="evid-gen-delete" onclick="eliminarEvidGen(${n})" title="Eliminar">✕</button>
+    `;
+    slot.classList.add('has-image');
+    actualizarContadorEvid();
+  };
+  reader.readAsDataURL(file);
+}
+function eliminarEvidGen(n) {
+  const slot = document.getElementById(`slot-gen-${n}`);
+  slot.innerHTML = `
+    <input type="file" id="evid-gen-${n}" accept=".jpg,.jpeg,.png" onchange="cargarEvidGen(${n},this)" />
+    <div class="slot-icon">📷</div>
+    <div class="slot-label">Foto ${n}</div>
+  `;
+  slot.classList.remove('has-image');
+  actualizarContadorEvid();
+}
+function actualizarContadorEvid() {
+  const count = [1,2,3].filter(n => document.getElementById(`slot-gen-${n}`)?.classList.contains('has-image')).length;
+  const el = document.getElementById('evid-gen-counter');
+  if (el) el.textContent = `${count} de 3 imágenes cargadas`;
+}
+// ─── CANVAS FIRMAS ───
+function initCanvas() {
+  ['inspector','jefe'].forEach(t => {
+    const c = document.getElementById(`canvas-${t}`);
+    c.width = c.offsetWidth; c.height = 150;
+    const ctx = c.getContext('2d');
+    ctx.strokeStyle = '#1F4E79'; ctx.lineWidth = 2; ctx.lineCap = 'round';
+  });
+}
+
+function getPos(e, c) {
+  const r = c.getBoundingClientRect();
+  const sx = c.width/r.width, sy = c.height/r.height;
+  const src = e.touches ? e.touches[0] : e;
+  return { x: (src.clientX-r.left)*sx, y: (src.clientY-r.top)*sy };
+}
+
+function startDraw(e,t) { e.preventDefault(); drawing[t]=true; lastPos[t]=getPos(e,document.getElementById(`canvas-${t}`)); }
+function draw(e,t) {
+  e.preventDefault(); if(!drawing[t]) return;
+  const c=document.getElementById(`canvas-${t}`); const ctx=c.getContext('2d'); const p=getPos(e,c);
+  ctx.beginPath(); ctx.moveTo(lastPos[t].x,lastPos[t].y); ctx.lineTo(p.x,p.y); ctx.stroke();
+  lastPos[t]=p;
+}
+function stopDraw(t) { drawing[t]=false; firmas[t]=document.getElementById(`canvas-${t}`).toDataURL(); }
+function limpiarFirma(t) { const c=document.getElementById(`canvas-${t}`); c.getContext('2d').clearRect(0,0,c.width,c.height); firmas[t]=null; }
+
+// ─── BORRADOR AUTOMÁTICO ───
+function guardarBorrador() {
+  if (!usuarioActual) return;
+  const datos = {
+    cliente: document.getElementById('cliente')?.value,
+    responsable: document.getElementById('responsable')?.value,
+    fecha_apertura: document.getElementById('fecha_apertura')?.value,
+    estado_ejecucion: document.getElementById('estado_ejecucion')?.value,
+    area_inspectora: document.getElementById('area_inspectora')?.value,
+    area_inspeccionada: document.getElementById('area_inspeccionada')?.value,
+    empresa_inspectora: document.getElementById('empresa_inspectora')?.value,
+    proyecto: document.getElementById('proyecto')?.value,
+    distrito: document.getElementById('distrito')?.value,
+    direccion: document.getElementById('direccion')?.value,
+    tipo_orden: document.getElementById('tipo_orden')?.value,
+    num_trabajo: document.getElementById('num_trabajo')?.value,
+    descripcion_tarea: document.getElementById('descripcion_tarea')?.value,
+    num_contrato: document.getElementById('num_contrato')?.value,
+    jefe_cuadrilla: document.getElementById('jefe_cuadrilla')?.value,
+    dni_jefe: document.getElementById('dni_jefe')?.value,
+    supervisor: document.getElementById('supervisor')?.value,
+    dni_supervisor: document.getElementById('dni_supervisor')?.value,
+    subproceso: document.getElementById('subproceso')?.value,
+    tipo_actividad: document.getElementById('tipo_actividad')?.value,
+    instalacion: document.getElementById('instalacion')?.value,
+    oportunidades_mejora: document.getElementById('oportunidades_mejora')?.value || '',
+    respuestas: respuestas,
+    usuario: usuarioActual,
+  };
+  localStorage.setItem('borrador_hse', JSON.stringify(datos));
+}
+
+function cargarBorrador() {
+  const guardado = localStorage.getItem('borrador_hse');
+  if (!guardado) return;
+  const datos = JSON.parse(guardado);
+  if (datos.usuario !== usuarioActual) return;
+
+  document.getElementById('draft-banner').classList.add('visible');
+
+  const campos = ['cliente','responsable','estado_ejecucion','area_inspectora',
+    'area_inspeccionada','empresa_inspectora','proyecto','distrito','direccion',
+    'tipo_orden','num_trabajo','descripcion_tarea','num_contrato','jefe_cuadrilla',
+    'dni_jefe','supervisor','dni_supervisor','subproceso','tipo_actividad','instalacion',
+    'oportunidades_mejora'];
+
+  campos.forEach(id => {
+    const el = document.getElementById(id);
+    if (el && datos[id]) el.value = datos[id];
+  });
+
+  if (datos.respuestas) {
+    Object.entries(datos.respuestas).forEach(([id, val]) => {
+      setResp(id, val);
+    });
+  }
+}
+
+function limpiarBorrador() {
+  localStorage.removeItem('borrador_hse');
+  document.getElementById('draft-banner').classList.remove('visible');
+}
+
+// ─── REVISIÓN ───
+function mostrarRevision() {
+  const datosGen = [
+    ['Cliente', document.getElementById('cliente')?.value],
+    ['Responsable', document.getElementById('responsable')?.value],
+    ['Fecha Apertura', document.getElementById('fecha_apertura')?.value],
+    ['Estado', document.getElementById('estado_ejecucion')?.value],
+    ['Proyecto', document.getElementById('proyecto')?.value],
+    ['Área Inspectora', document.getElementById('area_inspectora')?.value],
+    ['Área Inspeccionada', document.getElementById('area_inspeccionada')?.value],
+    ['Empresa Inspectora', document.getElementById('empresa_inspectora')?.value],
+    ['Tipo Inspección', document.getElementById('tipo_inspeccion')?.value],
+    ['Distrito', document.getElementById('distrito')?.value],
+    ['Dirección', document.getElementById('direccion')?.value],
+    ['Tipo Orden', document.getElementById('tipo_orden')?.value],
+    ['N° Trabajo', document.getElementById('num_trabajo')?.value],
+    ['Descripción Tarea', document.getElementById('descripcion_tarea')?.value],
+    ['N° Contrato', document.getElementById('num_contrato')?.value],
+    ['Jefe de Cuadrilla', document.getElementById('jefe_cuadrilla')?.value],
+    ['DNI Jefe', document.getElementById('dni_jefe')?.value],
+    ['Supervisor Operativo', document.getElementById('supervisor')?.value],
+    ['DNI Supervisor', document.getElementById('dni_supervisor')?.value],
+    ['Subproceso', document.getElementById('subproceso')?.value],
+    ['Tipo Actividad', document.getElementById('tipo_actividad')?.value],
+    ['Instalación', document.getElementById('instalacion')?.value],
+  ];
+
+  document.getElementById('rev-datos').innerHTML = datosGen
+    .filter(([k, v]) => v)
+    .map(([k, v]) => `
+      <div style="display:flex;padding:8px 0;border-bottom:1px solid #eee;gap:12px;">
+        <div style="font-weight:bold;color:#555;font-size:13px;min-width:160px;">${k}</div>
+        <div style="font-size:13px;color:#333;">${v}</div>
+      </div>
+    `).join('');
+
+  const colores = {
+    'Cumple': '#1E6B3C',
+    'No cumple': '#C00000',
+    'N/A': '#666'
+  };
+
+  const renderRevItems = (items, containerId) => {
+    document.getElementById(containerId).innerHTML = items.map(item => {
+      const resp = respuestas[item.id] || '—';
+      const color = colores[resp] || '#999';
+      return `
+        <div style="display:flex;align-items:flex-start;padding:8px 0;border-bottom:1px solid #eee;gap:12px;">
+          <div style="background:#1F4E79;color:white;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:bold;white-space:nowrap;">${item.codigo}</div>
+          <div style="flex:1;font-size:12px;color:#444;">${item.desc}</div>
+          <div style="font-weight:bold;color:${color};font-size:12px;white-space:nowrap;">${resp}</div>
+        </div>
+      `;
+    }).join('');
+  };
+
+renderRevItems(itemsCRO,   'rev-cro');
+renderRevItems(itemsAIC,  'rev-aic');
+renderRevItems(itemsPT,   'rev-pt');
+renderRevItems(itemsEPP,   'rev-epp');
+renderRevItems(itemsCOVID,   'rev-covid');
+renderRevItems(itemsDHSE,   'rev-dhse');
+renderRevItems(itemsMEH,   'rev-meh');
+renderRevItems(itemsCT,   'rev-ct');
+renderRevItems(itemsSPP,   'rev-spp');
+renderRevItems(itemsIRC,   'rev-irc');
+renderRevItems(itemsICP,  'rev-icp');
+renderRevItems(itemsVM,   'rev-vm');
+renderRevItems(itemsPAE, 'rev-pae');
+renderRevItems(itemsIC,   'rev-ic');
+
+  // Evidencias Generales en revisión
+  const revEvid = document.getElementById('rev-evidencias');
+  if (revEvid) {
+    const imgs = [1,2,3].map(n => {
+      const slot = document.getElementById(`slot-gen-${n}`);
+      if (slot?.classList.contains('has-image')) {
+        const img = slot.querySelector('img');
+        return img ? `<img src="${img.src}" class="rev-evid-img" />` : '';
+      }
+      return '';
+    }).filter(Boolean);
+    revEvid.innerHTML = imgs.length ? imgs.join('') : '<span style="font-size:13px;color:#aaa;">Sin evidencias adjuntadas.</span>';
+  }
+
+  // Oportunidades de Mejora en revisión
+  const opText = document.getElementById('oportunidades_mejora')?.value || '';
+  const revOp = document.getElementById('rev-oportunidades');
+  if (revOp) revOp.textContent = opText || 'Sin oportunidades de mejora registradas.';
+
+  document.getElementById('form-screen').style.display = 'none';
+  document.getElementById('revision-screen').style.display = 'block';
+  document.getElementById('header-user-rev').textContent = usuarioActual;
+  window.scrollTo(0, 0);
+}
+
+function volverFormulario() {
+  document.getElementById('revision-screen').style.display = 'none';
+  document.getElementById('form-screen').style.display = 'block';
+  window.scrollTo(0, 0);
+}
+
+function editarSeccion(seccion) {
+  document.getElementById('revision-screen').style.display = 'none';
+  document.getElementById('form-screen').style.display = 'block';
+  window.scrollTo(0, 0);
+
+  setTimeout(() => {
+    const ids = {
+      'datos': 'area_inspectora',
+      'cro':   'items-cro',
+      'aic':  'items-aic',
+      'pt':   'items-pt',
+      'epp':   'items-epp',
+      'covid':   'items-covid',
+      'dhse':   'items-dhse',
+      'meh':   'items-meh',
+      'ct':   'items-ct',
+      'spp':   'items-spp',
+      'irc':   'items-irc',
+      'icp':  'items-icp',
+      'vm':   'items-vm',
+      'pae': 'items-pae',
+      'ic':   'items-ic',
+    };
+    const el = document.getElementById(ids[seccion]);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 100);
+}
+
+function updateProgress() {
+  const total = itemsCRO.length + itemsAIC.length + itemsPT.length + itemsEPP.length +
+              itemsCOVID.length + itemsDHSE.length + itemsMEH.length + itemsCT.length +
+              itemsSPP.length + itemsIRC.length + itemsICP.length + itemsVM.length +
+              itemsPAE.length + itemsIC.length;
+  document.getElementById('progress').style.width = Math.round(Object.keys(respuestas).length/total*100)+'%';
+  guardarBorrador();
+}
+
+// ─── ENVIAR ───
+async function enviarInspeccion() {
+  const reqs = ['cliente','responsable','fecha_apertura','estado_ejecucion','area_inspectora','area_inspeccionada','empresa_inspectora','proyecto','distrito','direccion','tipo_orden','num_trabajo','descripcion_tarea','jefe_cuadrilla','dni_jefe','subproceso','tipo_actividad','instalacion'];
+  for (const id of reqs) {
+    const el = document.getElementById(id);
+    if (!el || !el.value) {
+      alert('Por favor completa todos los campos obligatorios (*)');
+      el?.focus();
+      return;
+    }
+  }
+
+  document.getElementById('loading').classList.add('visible');
+  document.getElementById('btn-confirmar').disabled = true;
+
+  try {
+    const firmaInspURL = await subirACloudinary(firmas.inspector, 'firma_inspector', 'firmas');
+
+    // Subir evidencias generales
+    const evidGenURLs = [];
+    for (let n = 1; n <= 3; n++) {
+      const slot = document.getElementById(`slot-gen-${n}`);
+      if (slot?.classList.contains('has-image')) {
+        const fi = document.getElementById(`evid-gen-${n}`);
+        if (fi?.files?.[0]) {
+          const url = await subirArchivoACloudinary(fi.files[0], `evid_general_${n}`);
+          if (url) evidGenURLs.push({ url });
+        }
+      }
+    }
+
+    const campos = {
+      'FECHA DE APERTURA': document.getElementById('fecha_apertura').value,
+      'ESTADO DE LA EJECUCIÓN': document.getElementById('estado_ejecucion').value,
+      'Correo corporativo': usuarioActual,
+      'Responsable de la Inspección (Apellidos y Nombres)': document.getElementById('responsable').value,
+      'Área inspectora': document.getElementById('area_inspectora').value,
+      'Área inspeccionada': document.getElementById('area_inspeccionada').value,
+      'Empresa Inspectora': document.getElementById('empresa_inspectora').value,
+      'Tipo de inspección': document.getElementById('tipo_inspeccion').value,
+      'Distrito': document.getElementById('distrito').value,
+      'Dirección': document.getElementById('direccion').value,
+      'Tipo de orden de Trabajo': document.getElementById('tipo_orden').value,
+      'N° de trabajo': document.getElementById('num_trabajo').value,
+      'Descripción de la Tarea': document.getElementById('descripcion_tarea').value,
+      'Proyecto': document.getElementById('proyecto').value,
+      'Jefe de Cuadrilla': document.getElementById('jefe_cuadrilla').value,
+      'DNI/ C.E (Jefe de Cuadrilla)': Number(document.getElementById('dni_jefe').value) || null,
+      'Supervisor Operativo': document.getElementById('supervisor').value || null,
+      'DNI/CE /Supervisor Operativo': Number(document.getElementById('dni_supervisor').value) || null,
+      'Subproceso': document.getElementById('subproceso').value,
+      'Tipo de Actividad': document.getElementById('tipo_actividad').value,
+      'Instalación Inspeccionada': document.getElementById('instalacion').value,
+      'Cliente': document.getElementById('cliente').value,
+    };
+
+    const contrato = Number(document.getElementById('num_contrato').value);
+    if (contrato) campos['N° de Contrato'] = contrato;
+
+    Object.keys(campos).forEach(k => {
+      if (campos[k] === null || campos[k] === '' || campos[k] === undefined || campos[k] === 0) delete campos[k];
+    });
+
+    if (firmaInspURL) campos['FIRMA DEL INSPECTOR HSE'] = [{ url: firmaInspURL }];
+
+    // Resultados de ítems (solo Cumple / No cumple / N/A)
+    [...itemsCRO, ...itemsAIC, ...itemsPT, ...itemsEPP, ...itemsCOVID,
+     ...itemsDHSE, ...itemsMEH, ...itemsCT, ...itemsSPP, ...itemsIRC,
+     ...itemsICP, ...itemsVM, ...itemsPAE, ...itemsIC].forEach(item => {
+      if (respuestas[item.id]) campos[item.campo] = respuestas[item.id];
+    });
+
+    // Agregar evidencias generales y oportunidades de mejora
+    if (evidGenURLs.length > 0) campos['Evidencias Generales'] = evidGenURLs;
+    const opMejora = document.getElementById('oportunidades_mejora')?.value;
+    if (opMejora) campos['Oportunidades de Mejora'] = opMejora;
+
+    const MAKE_WEBHOOK = 'https://hook.us2.make.com/pt0v8y4y7x95ctbhs3ceyorajvj9smfx';
+
+    const response = await fetch(MAKE_WEBHOOK, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(campos)
+    });
+
+    if (response.ok) {
+      document.getElementById('loading').classList.remove('visible');
+      document.getElementById('revision-screen').style.display = 'none';
+      limpiarBorrador();
+      const ss = document.getElementById('success-screen');
+      ss.style.display = 'flex';
+      document.getElementById('success-codigo').textContent = '¡Inspección registrada exitosamente!';
+    } else {
+      throw new Error('Error al enviar al servidor. Intenta nuevamente.');
+    }
+
+  } catch (err) {
+    document.getElementById('loading').classList.remove('visible');
+    document.getElementById('btn-confirmar').disabled = false;
+    alert('Error: ' + err.message);
+  }
+}
+
+// Actualizar nombre jefe + guardar borrador
+document.addEventListener('input', e => {
+  guardarBorrador();
+  if (e.target.id === 'jefe_cuadrilla') {
+    document.getElementById('nombre-jefe').textContent = e.target.value.toUpperCase();
+  }
+});
+</script>
+</body>
+</html>
