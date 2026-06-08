@@ -560,15 +560,15 @@
           <label>Proyecto *</label>
           <select id="proyecto" required>
             <option value="">Seleccionar...</option>
-            <option>Anillo Vial</option>
-            <option>Mantenimiento de Transformadores Pluz</option>
-            <option>Mantenimiento de Transformadores Orygen</option>
-            <option>Mantenimiento de Líneas</option>
-            <option>Caudivilla</option>
-            <option>Yaros</option>
-            <option>Chimú</option>
-            <option>Chevez</option>
-            <option>Pico</option>
+            <option>ANILLO VIAL</option>
+            <option>MANTENIMIENTO DE TRANSFORMADORES PLUZ</option>
+            <option>MANTENIMIENTO DE TRANSFORMADORES ORYGEN</option>
+            <option>MANTENIMIENTO DE LÍNEAS</option>
+            <option>CAUDIVILLA</option>
+            <option>YAROS</option>
+            <option>CHIMÚ</option>
+            <option>CHEVEZ</option>
+            <option>PICO</option>
           </select>
         </div>
 
@@ -987,46 +987,6 @@
   </div>
 </div>
 
-
-
- <!-- EVIDENCIAS GENERALES -->
-<div class="card">
-  <div class="card-title">📷 Evidencias Generales</div>
-  <p style="font-size:13px;color:#64748B;margin-bottom:20px;">Puedes adjuntar hasta 3 imágenes de evidencia de la inspección.</p>
-  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;">
-
-    <div>
-      <div class="file-upload" onclick="document.getElementById('evid-gen-1').click()">
-        <div class="upload-icon">☁️</div>
-        <div class="upload-title">Evidencia 1</div>
-        <div class="upload-subtitle">Clic para seleccionar imagen</div>
-        <input type="file" id="evid-gen-1" accept="image/*" onchange="previewGenImg(1,this)" />
-        <img id="prev-gen-1" class="file-preview" />
-      </div>
-    </div>
-
-    <div>
-      <div class="file-upload" onclick="document.getElementById('evid-gen-2').click()">
-        <div class="upload-icon">☁️</div>
-        <div class="upload-title">Evidencia 2</div>
-        <div class="upload-subtitle">Clic para seleccionar imagen</div>
-        <input type="file" id="evid-gen-2" accept="image/*" onchange="previewGenImg(2,this)" />
-        <img id="prev-gen-2" class="file-preview" />
-      </div>
-    </div>
-
-    <div>
-      <div class="file-upload" onclick="document.getElementById('evid-gen-3').click()">
-        <div class="upload-icon">☁️</div>
-        <div class="upload-title">Evidencia 3</div>
-        <div class="upload-subtitle">Clic para seleccionar imagen</div>
-        <input type="file" id="evid-gen-3" accept="image/*" onchange="previewGenImg(3,this)" />
-        <img id="prev-gen-3" class="file-preview" />
-      </div>
-    </div>
-
-  </div>
-</div>  
    
     <!-- FIRMAS -->
     <div class="card">
@@ -1055,7 +1015,6 @@
 <div id="revision-screen" style="display:none;">
   <div class="header">
     <div style="display:flex;align-items:center;gap:14px;">
-      <img src="logo.png" alt="UNITELEC" style="height:38px;object-fit:contain;filter:brightness(0) invert(1);" onerror="this.style.display='none'" />
       <div>
         <div class="header-logo">UNITELEC HSE</div>
         <div class="header-title">Revisión de Inspección</div>
