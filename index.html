@@ -1582,21 +1582,43 @@ function itemHTML(item, tipo) {
         <button class="btn-respuesta nocumple" id="btn-${item.id}-nocumple" onclick="setResp('${item.id}','No cumple')">No cumple</button>
         <button class="btn-respuesta na" id="btn-${item.id}-na" onclick="setResp('${item.id}','N/A')">N/A</button>
       </div>
-      <div style="display:flex;align-items:flex-start;gap:16px;margin-top:14px;flex-wrap:wrap;">
-        <div style="flex:1;min-width:180px;">
-          <label style="font-size:11px;font-weight:700;color:#64748B;text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:6px;">📝 Observaciones</label>
-          <textarea id="obs-${item.id}" placeholder="Escribe aquí..." 
-            style="width:100%;padding:10px 14px;border:1.5px solid #D8E1EC;border-radius:12px;font-size:13px;background:#F8FAFC;resize:vertical;height:80px;font-family:inherit;line-height:1.4;">
-          </textarea>
+      <div class="item-extra">
+        <div class="item-obs">
+          <label>📝 Observaciones</label>
+          <textarea id="obs-${item.id}" placeholder="Observaciones..."></textarea>
         </div>
-        <div style="display:flex;flex-direction:column;align-items:flex-start;gap:6px;flex-shrink:0;padding-top:2px;">
-          <label style="font-size:11px;font-weight:700;color:#64748B;text-transform:uppercase;letter-spacing:1px;">📷 Evidencia</label>
-          <div style="display:flex;gap:8px;">
-            <button id="esi-${item.id}" onclick="toggleEvid('${item.id}',true)"
-              style="padding:6px 14px;border-radius:999px;border:1.5px solid #ddd;background:white;cursor:pointer;font-size:12px;font-weight:700;">Sí</button>
-            <button id="eno-${item.id}" onclick="toggleEvid('${item.id}',false)"
-              style="padding:6px 14px;border-radius:999px;border:1.5px solid #999;background:#999;color:white;cursor:pointer;font-size:12px;font-weight:700;">No</button>
+        <div>
+          <div class="evidencia-toggle">
+            <label>📷 ¿Adjuntar evidencia?</label>
+            <div class="toggle-btn">
+              <button id="esi-${item.id}" onclick="toggleEvid('${item.id}',true)">Sí</button>
+              <button id="eno-${item.id}" class="active-no" onclick="toggleEvid('${item.id}',false)">No</button>
+            </div>
           </div>
+<div class="evidencia-section" id="evid-${item.id}">
+  <div class="file-upload" onclick="document.getElementById('file-${item.id}').click()">
+
+    <div class="upload-icon">☁️</div>
+
+    <div class="upload-title">
+      Arrastra tu evidencia aquí
+    </div>
+
+    <div class="upload-subtitle">
+      o haz clic para seleccionar una imagen
+    </div>
+
+    <input 
+      type="file"
+      id="file-${item.id}"
+      accept="image/*"
+      onchange="previewImg('${item.id}',this)"
+    />
+
+    <img id="prev-${item.id}" class="file-preview" />
+
+  </div>
+</div>
         </div>
       </div>
     </div>`;
