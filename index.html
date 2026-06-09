@@ -3271,20 +3271,16 @@ async function enviarInspeccion() {
 
   try {
     const firmaInspURL = await subirACloudinary(firmas.inspector, 'firma_inspector', 'firmas');
+    const firmaJefeURL = await subirACloudinary(firmas.jefe, 'firma_jefe', 'firmas');
 
     // Subir evidencias generales
     const evidGenURLs = [];
-    for (let n = 1; n <= 3; n++) {
-      const slot = document.getElementById(`slot-gen-${n}`);
-      if (slot?.classList.contains('has-image')) {
-        const fi = document.getElementById(`evid-gen-${n}`);
-        if (fi?.files?.[0]) {
-          const url = await subirArchivoACloudinary(fi.files[0], `evid_general_${n}`);
-          if (url) evidGenURLs.push({ url });
-        }
-      }
-    }
-
+for (let n = 1; n <= 3; n++) {
+  if (evidGenFiles[n]) {
+    const url = await subirArchivoACloudinary(evidGenFiles[n], `evid_general_${n}`);
+    if (url) evidGenURLs.push({ url });
+  }
+}
     const campos = {
       'FECHA DE APERTURA': document.getElementById('fecha_apertura').value,
       'ESTADO DE LA EJECUCIÓN': document.getElementById('estado_ejecucion').value,
@@ -3318,6 +3314,7 @@ async function enviarInspeccion() {
     });
 
     if (firmaInspURL) campos['FIRMA DEL INSPECTOR HSE'] = [{ url: firmaInspURL }];
+    if (firmaJefeURL) campos['FIRMA DEL JEFE DE CUADRILLA'] = [{ url: firmaJefeURL }];
 
     // Resultados de ítems (solo Cumple / No cumple / N/A)
     [...itemsCRO, ...itemsAIC, ...itemsPT, ...itemsEPP, ...itemsCOVID,
