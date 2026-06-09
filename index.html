@@ -1803,7 +1803,7 @@ canvas { width: 100%; height: 150px; cursor: crosshair; touch-action: none; disp
 <div class="card card-seccion">
   <div class="seccion-header seccion-ic">
     <div class="seccion-toggle" onclick="toggleSeccion('ic')">
-      <div class="seccion-titulo"><span class="seccion-icon">🏢</span> INFRAESTRUCTURA Y CARTELES <span class="badge-count">4 ítems</span></div>
+      <div class="seccion-titulo"><span class="seccion-icon">🏢</span> INFRAESTRUCTURA Y CARTELES <span class="badge-count">9 ítems</span></div>
       <span class="seccion-arrow" id="arrow-ic">▼</span>
     </div>
     <select class="estado-general-select" onchange="aplicarEstadoGeneral('ic', this.value)">
@@ -2444,17 +2444,22 @@ const itemsVM = [
 ];
 // ── PRIMEROS AUXILIOS Y EMERGENCIAS ──
 const itemsPAE = [
-  {id:'13_1', codigo:'13.1', campo:'13.1. Se dispone de botiquín implementado y vigente', desc:'13.1. Se dispone de botiquín implementado y vigente'},
-  {id:'13_2', codigo:'13.2', campo:'13.2. Se dispone de extintor operativo y vigente', desc:'13.2. Se dispone de extintor operativo y vigente'},
-  {id:'13_3', codigo:'13.3', campo:'13.3. El personal conoce el procedimiento de respuesta ante emergencias', desc:'13.3. El personal conoce el procedimiento de respuesta ante emergencias'},
-  {id:'13_4', codigo:'13.4', campo:'13.4. Se cuenta con directorio de emergencia actualizado', desc:'13.4. Se cuenta con directorio de emergencia actualizado'},
+  {id:'13_1', codigo:'13.1', campo:'13.1. Botiquín de primeros auxilios completo', desc:'13.1. Botiquín de primeros auxilios completo'},
+  {id:'13_2', codigo:'13.2', campo:'13.2. Medicamentos vencidos', desc:'13.2. Medicamentos vencidos'},
+  {id:'13_3', codigo:'13.3', campo:'13.3. Extintores según la actividad', desc:'13.3. Extintores según la actividad'},
+  {id:'13_4', codigo:'13.4', campo:'13.4. Estación de emergencia de primeros auxilios (mochila de emergencia con insumos médicos, megáfono, extintor, frazada, camilla, férulas inflables para miembros inferior y superior)', desc:'13.4. Estación de emergencia de primeros auxilios (mochila de emergencia con insumos médicos, megáfono, extintor, frazada, camilla, férulas inflables para miembros inferior y superior)o'},
 ];
 // ── INFRAESTRUCTURA Y CARTELES ──
 const itemsIC = [
-  {id:'14_1', codigo:'14.1', campo:'14.1. Los accesos y vías de circulación se encuentran en condiciones seguras', desc:'14.1. Los accesos y vías de circulación se encuentran en condiciones seguras'},
-  {id:'14_2', codigo:'14.2', campo:'14.2. Existen carteles obligatorios y reglamentarios visibles', desc:'14.2. Existen carteles obligatorios y reglamentarios visibles'},
-  {id:'14_3', codigo:'14.3', campo:'14.3. Los ambientes de trabajo presentan condiciones adecuadas de orden y limpieza', desc:'14.3. Los ambientes de trabajo presentan condiciones adecuadas de orden y limpieza'},
-  {id:'14_4', codigo:'14.4', campo:'14.4. La infraestructura no presenta daños que comprometan la seguridad', desc:'14.4. La infraestructura no presenta daños que comprometan la seguridad'},
+  {id:'14_1', codigo:'14.1', campo:'14.1. Cuenta con comedor en obra y este cumple requisitos de seguridad', desc:'14.1. Cuenta con comedor en obra y este cumple requisitos de seguridad'},
+  {id:'14_2', codigo:'14.2', campo:'14.2. Cuenta con baños químicos y son suficientes', desc:'14.2. Cuenta con baños químicos y son suficientes'},
+  {id:'14_3', codigo:'14.3', campo:'14.3. Cuenta con puntos temporales para RR.SS. (tachos para segregación de residuos)', desc:'14.3. Cuenta con puntos temporales para RR.SS. (tachos para segregación de residuos)'},
+  {id:'14_4', codigo:'14.4', campo:'14.4. Cuenta con lava ojos', desc:'14.4. Cuenta con lava ojos'},
+  {id:'14_5', codigo:'14.5', campo:'14.5. CCuenta con kit y bandejas antiderrame', desc:'14.5. Cuenta con kit y bandejas antiderrame'},
+  {id:'14_6', codigo:'14.6', campo:'14.6. Cuenta con unidad de emergencia', desc:'14.6. Cuenta con unidad de emergencia'},
+  {id:'14_7', codigo:'14.7', campo:'14.7. Cuenta con carteles informativos HSE (mapa de riesgos, panel informativo, etc.)', desc:'14.7. Cuenta con carteles informativos HSE (mapa de riesgos, panel informativo, etc.)'},
+  {id:'14_8', codigo:'14.8', campo:'14.8. Cuenta con la señalización en obra (rutas de evacuación, puntos de reunión) y esta es suficiente', desc:'14.8. Cuenta con la señalización en obra (rutas de evacuación, puntos de reunión) y esta es suficiente'},
+  {id:'14_9', codigo:'14.9', campo:'14.9. Cuenta con mallas de seguridad naranja con sus parantes (cachacos) y esta es suficiente', desc:'14.9. Cuenta con mallas de seguridad naranja con sus parantes (cachacos) y esta es suficiente'},
 ];
 
 // ─── ESTADO ───
