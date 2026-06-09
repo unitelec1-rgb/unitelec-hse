@@ -2468,6 +2468,7 @@ let respuestas = {};
 let drawing = { inspector: false, jefe: false };
 let lastPos = {};
 let firmas = { inspector: null, jefe: null };
+let evidGenFiles = { 1: null, 2: null, 3: null };
 
 // ─── LOGIN ───
 function login() {
@@ -2630,6 +2631,7 @@ function cargarEvidGen(n, input) {
     input.value = '';
     return;
   }
+  evidGenFiles[n] = file; // guardar referencia antes de que el slot se re-renderice
   const reader = new FileReader();
   reader.onload = e => {
     const slot = document.getElementById(`slot-gen-${n}`);
@@ -2642,6 +2644,7 @@ function cargarEvidGen(n, input) {
   };
   reader.readAsDataURL(file);
 }
+evidGenFiles[n] = null;
 function eliminarEvidGen(n) {
   const slot = document.getElementById(`slot-gen-${n}`);
   slot.innerHTML = `
