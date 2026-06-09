@@ -3274,13 +3274,9 @@ async function enviarInspeccion() {
     const firmaJefeURL  = await subirACloudinary(firmas.jefe,      'firma_jefe',      'firmas');
 
     // Subir evidencias generales (se leen desde evidGenFiles, no del DOM)
-    const evidGenURLs = [];
-    for (let n = 1; n <= 3; n++) {
-      if (evidGenFiles[n]) {
-        const url = await subirArchivoACloudinary(evidGenFiles[n], `evid_general_${n}`);
-        if (url) evidGenURLs.push({ url });
-      }
-    }
+    const evidGen1URL = evidGenFiles[1] ? await subirArchivoACloudinary(evidGenFiles[1], 'evid_general_1') : null;
+    const evidGen2URL = evidGenFiles[2] ? await subirArchivoACloudinary(evidGenFiles[2], 'evid_general_2') : null;
+    const evidGen3URL = evidGenFiles[3] ? await subirArchivoACloudinary(evidGenFiles[3], 'evid_general_3') : null;
 
     const campos = {
       'FECHA DE APERTURA': document.getElementById('fecha_apertura').value,
@@ -3325,7 +3321,9 @@ async function enviarInspeccion() {
     });
 
     // Agregar evidencias generales y oportunidades de mejora
-    if (evidGenURLs.length > 0) campos['Evidencias Generales'] = evidGenURLs;
+    if (evidGen1URL) campos['Evidencia General 1'] = [{ url: evidGen1URL }];
+    if (evidGen2URL) campos['Evidencia General 2'] = [{ url: evidGen2URL }];
+    if (evidGen3URL) campos['Evidencia General 3'] = [{ url: evidGen3URL }];
     const opMejora = document.getElementById('oportunidades_mejora')?.value;
     if (opMejora) campos['Oportunidades de Mejora'] = opMejora;
 
