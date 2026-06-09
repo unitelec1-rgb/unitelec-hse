@@ -1708,7 +1708,7 @@ canvas { width: 100%; height: 150px; cursor: crosshair; touch-action: none; disp
 <div class="card card-seccion">
   <div class="seccion-header seccion-spp">
     <div class="seccion-toggle" onclick="toggleSeccion('spp')">
-      <div class="seccion-titulo"><span class="seccion-icon">🚧</span> SEÑALIZACIÓN Y PROTECCIÓN PÚBLICA <span class="badge-count">4 ítems</span></div>
+      <div class="seccion-titulo"><span class="seccion-icon">🚧</span> SEÑALIZACIÓN Y PROTECCIÓN PÚBLICA <span class="badge-count">2 ítems</span></div>
       <span class="seccion-arrow" id="arrow-spp">▼</span>
     </div>
     <select class="estado-general-select" onchange="aplicarEstadoGeneral('spp', this.value)">
@@ -1727,7 +1727,7 @@ canvas { width: 100%; height: 150px; cursor: crosshair; touch-action: none; disp
 <div class="card card-seccion">
   <div class="seccion-header seccion-irc">
     <div class="seccion-toggle" onclick="toggleSeccion('irc')">
-      <div class="seccion-titulo"><span class="seccion-icon">🎯</span> IDENTIFICACIÓN DE RIESGOS Y CHARLA 5 MIN. <span class="badge-count">4 ítems</span></div>
+      <div class="seccion-titulo"><span class="seccion-icon">🎯</span> IDENTIFICACIÓN DE RIESGOS Y CHARLA 5 MIN. <span class="badge-count">2 ítems</span></div>
       <span class="seccion-arrow" id="arrow-irc">▼</span>
     </div>
     <select class="estado-general-select" onchange="aplicarEstadoGeneral('irc', this.value)">
@@ -1746,7 +1746,7 @@ canvas { width: 100%; height: 150px; cursor: crosshair; touch-action: none; disp
 <div class="card card-seccion">
   <div class="seccion-header seccion-icp">
     <div class="seccion-toggle" onclick="toggleSeccion('icp')">
-      <div class="seccion-titulo"><span class="seccion-icon">👷</span> IDENTIFICACIÓN Y COMPETENCIA DEL PERSONAL <span class="badge-count">4 ítems</span></div>
+      <div class="seccion-titulo"><span class="seccion-icon">👷</span> IDENTIFICACIÓN Y COMPETENCIA DEL PERSONAL <span class="badge-count">3 ítems</span></div>
       <span class="seccion-arrow" id="arrow-icp">▼</span>
     </div>
     <select class="estado-general-select" onchange="aplicarEstadoGeneral('icp', this.value)">
@@ -1765,7 +1765,7 @@ canvas { width: 100%; height: 150px; cursor: crosshair; touch-action: none; disp
 <div class="card card-seccion">
   <div class="seccion-header seccion-vm">
     <div class="seccion-toggle" onclick="toggleSeccion('vm')">
-      <div class="seccion-titulo"><span class="seccion-icon">🚚</span> VEHÍCULOS Y MAQUINARIAS <span class="badge-count">4 ítems</span></div>
+      <div class="seccion-titulo"><span class="seccion-icon">🚚</span> VEHÍCULOS Y MAQUINARIAS <span class="badge-count">3 ítems</span></div>
       <span class="seccion-arrow" id="arrow-vm">▼</span>
     </div>
     <select class="estado-general-select" onchange="aplicarEstadoGeneral('vm', this.value)">
@@ -2422,31 +2422,25 @@ const itemsCT = [
 ];
 // ── SEÑALIZACIÓN Y PROTECCIÓN PÚBLICA ──
 const itemsSPP = [
-  {id:'9_1', codigo:'9.1', campo:'9.1. Se cuenta con señalización preventiva, informativa y restrictiva de acuerdo con la actividad', desc:'9.1. Se cuenta con señalización preventiva, informativa y restrictiva de acuerdo con la actividad'},
-  {id:'9_2', codigo:'9.2', campo:'9.2. La zona de trabajo se encuentra delimitada adecuadamente', desc:'9.2. La zona de trabajo se encuentra delimitada adecuadamente'},
-  {id:'9_3', codigo:'9.3', campo:'9.3. Existen medidas para proteger a peatones, vehículos y terceros', desc:'9.3. Existen medidas para proteger a peatones, vehículos y terceros'},
-  {id:'9_4', codigo:'9.4', campo:'9.4. Se mantiene libre y seguro el acceso al área de trabajo', desc:'9.4. Se mantiene libre y seguro el acceso al área de trabajo'},
+  {id:'9_1', codigo:'9.1', campo:'9.1. Protección completa de la zona de trabajo', desc:'9.1. Protección completa de la zona de trabajo'},
+  {id:'9_2', codigo:'9.2', campo:'9.2. Señalización completa de la zona de trabajo', desc:'9.2. Señalización completa de la zona de trabajo'},
 ];
 // ── IDENTIFICACIÓN DE RIESGOS Y CHARLA DE 5 MINUTOS ──
 const itemsIRC = [
-  {id:'10_1', codigo:'10.1', campo:'10.1. Se realizó charla de 5 minutos antes de iniciar las actividades', desc:'10.1. Se realizó charla de 5 minutos antes de iniciar las actividades'},
-  {id:'10_2', codigo:'10.2', campo:'10.2. Los riesgos de la actividad fueron identificados por el personal', desc:'10.2. Los riesgos de la actividad fueron identificados por el personal'},
-  {id:'10_3', codigo:'10.3', campo:'10.3. Los controles establecidos son conocidos por todos los trabajadores', desc:'10.3. Los controles establecidos son conocidos por todos los trabajadores'},
-  {id:'10_4', codigo:'10.4', campo:'10.4. El personal firma los registros correspondientes de la charla realizada', desc:'10.4. El personal firma los registros correspondientes de la charla realizada'},
+  {id:'10_1', codigo:'10.1', campo:'10.1. Se identificó los riesgos de la tarea', desc:'10.1. Se identificó los riesgos de la tarea'},
+  {id:'10_2', codigo:'10.2', campo:'10.2. Se realizó la charla inicial de cinco minutos', desc:'10.2. Se realizó la charla inicial de cinco minutos'},
 ];
 // ── IDENTIFICACIÓN Y COMPETENCIA DEL PERSONAL ──
 const itemsICP = [
-  {id:'11_1', codigo:'11.1', campo:'11.1. El personal cuenta con fotocheck o identificación visible', desc:'11.1. El personal cuenta con fotocheck o identificación visible'},
-  {id:'11_2', codigo:'11.2', campo:'11.2. El personal cuenta con capacitaciones vigentes para la actividad', desc:'11.2. El personal cuenta con capacitaciones vigentes para la actividad'},
-  {id:'11_3', codigo:'11.3', campo:'11.3. El personal cuenta con certificaciones requeridas para trabajos de alto riesgo', desc:'11.3. El personal cuenta con certificaciones requeridas para trabajos de alto riesgo'},
-  {id:'11_4', codigo:'11.4', campo:'11.4. El personal demuestra conocimiento de los procedimientos aplicables', desc:'11.4. El personal demuestra conocimiento de los procedimientos aplicables'},
+  {id:'11_1', codigo:'11.1', campo:'11.1. Porta credencial de identificación autorizada para trabajar', desc:'11.1. Porta credencial de identificación autorizada para trabajar'},
+  {id:'11_2', codigo:'11.2', campo:'11.2. Personal posee competencia adecuada para actividad técnica que ejecuta', desc:'11.2. Personal posee competencia adecuada para actividad técnica que ejecuta'},
+  {id:'11_3', codigo:'11.3', campo:'11.3. Sabe/conoce como actuar en caso de emergencias, accidentes, incidentes de trabajo', desc:'11.3. Sabe/conoce como actuar en caso de emergencias, accidentes, incidentes de trabajo'},
 ];
 // ── VEHÍCULOS Y MAQUINARIAS ──
 const itemsVM = [
-  {id:'12_1', codigo:'12.1', campo:'12.1. Vehículos y maquinaria cuentan con check list de pre uso', desc:'12.1. Vehículos y maquinaria cuentan con check list de pre uso'},
-  {id:'12_2', codigo:'12.2', campo:'12.2. Vehículos y maquinaria se encuentran en condiciones operativas seguras', desc:'12.2. Vehículos y maquinaria se encuentran en condiciones operativas seguras'},
-  {id:'12_3', codigo:'12.3', campo:'12.3. Cuentan con extintor, conos, tacos y elementos de emergencia', desc:'12.3. Cuentan con extintor, conos, tacos y elementos de emergencia'},
-  {id:'12_4', codigo:'12.4', campo:'12.4. El operador cuenta con licencia y autorización vigente', desc:'12.4. El operador cuenta con licencia y autorización vigente'},
+  {id:'12_1', codigo:'12.1', campo:'12.1. Equipamientos y accesorios del vehículo cumplen especificaciones técnicas requeridas', desc:'12.1. Equipamientos y accesorios del vehículo cumplen especificaciones técnicas requeridas'},
+  {id:'12_2', codigo:'12.2', campo:'12.2. Posee documentación del vehículo: Revisión técnica vehicular, SOAT, Habilitación Vehicular, Tarjeta de Identificación vehicular, Póliza de Responsabilidad Civil, Programa de mantenimiento preventivo, certificado de operatividad, etc.', desc:'12.2. Posee documentación del vehículo: Revisión técnica vehicular, SOAT, Habilitación Vehicular, Tarjeta de Identificación vehicular, Póliza de Responsabilidad Civil, Programa de mantenimiento preventivo, certificado de operatividad, etc.'},
+  {id:'12_3', codigo:'12.3', campo:'12.3. Posee documentación el conductor u operador: EMO, Manejo defensivo, Licencia de conducir mínimo AII, certificado de operador, etc.', desc:'12.3. Posee documentación el conductor u operador: EMO, Manejo defensivo, Licencia de conducir mínimo AII, certificado de operador, etc.'},
 ];
 // ── PRIMEROS AUXILIOS Y EMERGENCIAS ──
 const itemsPAE = [
